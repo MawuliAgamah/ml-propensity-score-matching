@@ -15,6 +15,7 @@ nswRe74_total <- rbind(nswRe74_treat, nswRe74_control)
 nswRe74_control <- drop(nswRe74_control$re78)
 
 gb <- rpart(treat ~ ., data = nswRe74_total, method = "anova")
+
 rpart.plot(gb,type = 3 , digits = 3 , fallen.leaves = TRUE)
 
 
