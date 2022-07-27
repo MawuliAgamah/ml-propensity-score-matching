@@ -12,51 +12,47 @@ library("randomForest")
 # ========  set working directory ======== 
 setwd("/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets") 
 set.seed(290875)
+
 # ========  Load data sets ========  
 
-# Lalonde
-
 simulated_rct_data <- read.csv("/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/simulated_experimental_dataset.csv")
+simulated_rct_data <- select(simulated_rct_data,-c("X")) # Drop ID col
 
-simulated_rct_data <- within(simulated_rct_data, rm(X))
-simulated_rct_data <- within(simulated_rct_data, rm(outcome)) # drop outcome
-simulated_rct_data$assignment = factor(simulated_rct_data$assignment, levels = c(0, 1)) # turn treatment into factor 
 
 sample = sample.split(simulated_rct_data$assignment, SplitRatio = .75)
 train = subset(simulated_rct_data, sample == TRUE)
 test  = subset(simulated_rct_data, sample == FALSE)
 
-
+assignment_vec = test %>% select(c("assignment"))
+test <- select(test,-c("assignment")) # drop assignment col from test
 
 # ======== CART ========
 
 model <- rpart(assignment ~. ,data = train,method = "class")
 plot(model)
-text(model, digits = 3)
+text(model, digits = 1)
 
 #estimate classes 
-predicted.classes <- model %>% predict(test, type = "class")
-# See accuracy 
-mean(predicted.classes == train$assignment)
+predicted <-predict(model,newdata = test, type = "class")
 
+# Accuracy 
+predicted <- predicted %>% as.data.frame()
+mean(predicted == assignment_vec)
 
-#Store predicted probabilites 
-predicted_probabilities <- model %>% predict(lalode_test,"prob")
-predicted_classes <- model %>% predict(lalode_test,"class") 
-predicted_probabilities_df <- unname(unlist(predicted_probabilities)) %>% as.data.frame()
-predicted_classes_df <- unname(unlist(predicted_classes)) %>% as.data.frame()
-
-
-
-# combine data frame with propensity scores 
-cps_control_with_ps <- cps_control
-cps_control_with_ps$PS <- predicted_probabilities_df[2]
 
 # ======== RANDOM Forest ========
-classifier_RF = randomForest(x = train[-1],
-                             y = train$assignment,
-                             ntree = 100)
+
+train_features <- select(train,-c("assignment"))
+train_outcome <- select(train,c("assignment"))
+
+train_outcome <- factor(train_outcome$assignment)
 
 
-y_pred = predict(classifier_RF, newdata = test[-1])
-mean(y_pred == train$assignment)
+classifier_RF = randomForest(x = train_features,y = train_outcome,ntree = 500)
+
+y_pred = predict(classifier_RF, newdata = test)
+
+#Show accuracy 
+mean(y_pred == factor(assignment_vec$assignment))
+
+     
