@@ -69,6 +69,7 @@ mean(predicted == factor(assignment_vec$treat))
 
 
 #Store predicted probability 
+
 predicted_probabilities <- model %>% predict(lalode_test,"prob")
 predicted_classes <- model %>% predict(lalode_test,"class") 
 predicted_probabilities_df <- unname(unlist(predicted_probabilities)) %>% as.data.frame()
@@ -93,6 +94,7 @@ pred <- predict(bst, test_matrix)
 prediction <- as.numeric(pred > 0.5)
 mean(prediction == assignment_vec$treat)
 xgb.plot.tree(model = bst)
+
 # ======== RANDOM FOREST ========
 
 train_features <- select(lalonde_train,-c("treat"))

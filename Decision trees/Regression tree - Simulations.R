@@ -1,4 +1,5 @@
-# ======== load libraries ========  
+# ======== load libraries ======== 
+
 library("rpart.plot")
 library("rpart")
 library("readxl")
@@ -9,6 +10,10 @@ library("haven")
 library("dplyr")  
 library("caTools")
 library("randomForest")
+library("rattle")
+library("rpart.plot")
+library("RColorBrewer")
+
 # ========  set working directory ======== 
 setwd("/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets") 
 set.seed(290875)
@@ -16,7 +21,7 @@ set.seed(290875)
 # ========  Load data sets ========  
 
 simulated_rct_data <- read.csv("/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/simulated_experimental_dataset.csv")
-simulated_rct_data <- select(simulated_rct_data,-c("X")) # Drop ID col
+simulated_rct_data <- select(simulated_rct_data,-c("X")) # Drop ID column
 
 
 sample = sample.split(simulated_rct_data$assignment, SplitRatio = .75)
@@ -28,9 +33,11 @@ test <- select(test,-c("assignment")) # drop assignment col from test
 
 # ======== CART ========
 
-model <- rpart(assignment ~. ,data = train,method = "class")
+model <- rpart(assignment ~. ,data = train,method = "class",minsplit = 2, minbucket = 1)
 plot(model)
 text(model, digits = 1)
+
+fancyRpartPlot(model, caption = NULL)
 
 #estimate classes 
 predicted <-predict(model,newdata = test, type = "class")
