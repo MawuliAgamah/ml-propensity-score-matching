@@ -46,31 +46,6 @@ m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "n
 m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "nearest", distance = logitUndajusted4$propensity_score,caliper = caliper4, replace = FALSE)
 
 
-
-
-
-
-common_support_plot<- function(cps1,psid1,cps2,psid2){
-  
- all_plots <-ggarrange(balance_plot_logit1,balance_plot_logit2, 
-                       balance_plot_logit3,balance_plot_logit4,
-                       ncol = 2,nrow = 2, common.legend = TRUE, 
-                      legend="right")+
-                      xlab("Lalonde's subsample with CPS controls")+
- 
- return(all_plots)
-  
-}
-
-
-
-
-
-
-
-
-
-
 # LOGIT - balance plots
 balance_plot_logit1 <- love.plot(m_out_logit1,
                                  stat = c("mean.diffs"),
