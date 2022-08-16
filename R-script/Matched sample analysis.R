@@ -1,43 +1,87 @@
 
-# Load ggplot2
-library("ggplot2")
+library("ggplot2") # visualization
+library("MatchIt") # Matching
+library("cobalt") #  covariate balance
 
-
-# Load matched datasets 
+# Load and organise matched datasets 
 
 # 1 - nsw lalonde + cps contol
 # 2 - nsw lalonde + psid contol
 # 3 - nsw dehejia & wahba + cps contol
 # 3 - nsw dehejia & wahba + psid contol
 
-# LOGIT 
 
-LOGIT_Matched1 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswCps_lalonde_LOGIT_psMatched.csv')
-LOGIT_Matched2 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswPsid_lalonde_LOGIT_psMatched.csv')
-LOGIT_Matched3 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswCps_dehWab_LOGIT_psMatched.csv')
-LOGIT_Matched4 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswPsid_dehWab_LOGIT_psMatched.csv')
+# LOGIT matched and unmatched ----
 
-LOGIT_Matched1$comparison_group <- "cps"
-LOGIT_Matched2$comparison_group <- "psid"
-LOGIT_Matched3$comparison_group <- "cps"
-LOGIT_Matched4$comparison_group <- "psid"
+# adjusted logit data set's
+LogitMatched1 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswCps_lalonde_LOGIT_psMatched.csv')
+logitMatched2 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswPsid_lalonde_LOGIT_psMatched.csv')
+logitmatched3 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswCps_dehWab_LOGIT_psMatched.csv')
+logitMatched4 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/nswPsid_dehWab_LOGIT_psMatched.csv')
 
-LOGIT_Matched1$sample <- "lalonde"
-LOGIT_Matched2$sample <- "lalonde"
-LOGIT_Matched3$sample <- "dehejia_wahba"
-LOGIT_Matched4$sample <- "dehejia_wahba"
+LogitMatched1$comparison_group <- "cps"
+logitMatched2$comparison_group <- "psid"
+logitmatched3$comparison_group <- "cps"
+logitMatched4$comparison_group <- "psid"
 
-logit_list <- list(LOGIT_Matched1 = "lalonde_cps",LOGIT_Matched2 = "lalonde_psid",LOGIT_Matched3 = "dehWab_cps",LOGIT_Matched4 = "dehWab_psid") # dataframes with a list 
+LogitMatched1$sample <- "lalonde"
+logitMatched2$sample <- "lalonde"
+logitmatched3$sample <- "dehejia_wahba"
+logitMatched4$sample <- "dehejia_wahba"
 
-Map(cbind, logit_list, model = "logit") # add column to indentify the model used for matching
+# un-adjusted logit data set's
+logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT.csv')
+logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_lalonde_ps_unmatched_LOGIT.csv')
+logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT.csv')
+logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT.csv')
+
+logitUndajusted1$comparison_group <- "cps"
+logitUndajusted2$comparison_group <- "psid"
+logitUndajusted3$comparison_group <- "cps"
+logitUndajusted4$comparison_group <- "psid"
+
+logitUndajusted1$sample <- "lalonde"
+logitUndajusted2$sample <- "lalonde"
+logitUndajusted3$sample <- "dehejia_wahba"
+logitUndajusted4$sample <- "dehejia_wahba"
+
+forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + re78 + propensity_score
+
+Call: 
+  matchit(formula = catholic ~ race_white + w3income + p5hmage + 
+            p5numpla + w3momed_hsb, data = ecls_nomiss, method = "nearest", 
+          distance = "logit", replace = TRUE)
+
+# define lists
+
+logitMatched_list <- list(LogitMatched1 = "lalonde_cps",LogitMatched2 = "lalonde_psid",LogitMatched3 = "dehWab_cps",LogitMatched4 = "dehWab_psid") # dataframes with a list 
+logitunadjusted_list <- list(logitUndajusted1 = "lalonde_cps",logitUndajusted2 = "lalonde_psid",logitUndajusted3 = "dehWab_cps",logitUndajusted3 = "dehWab_psid") # dataframes with a list 
+
+Map(cbind, logitMatched_list, model = "logit")    # add column to identify the model used for matching
+Map(cbind, logitunadjusted_list, model = "logit") # add column to identify the model used for matching
+
 
 # CART 
+
+
 CART_Matched1 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/nswCps_lalonde_CART_psMatched.csv')
 CART_Matched2 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/nswPsid_lalonde_CART_psMatched.csv')
 CART_Matched3 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/nswCps_dehWab_CART_psMatched.csv')
 CART_Matched4 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/nswPsid_dehWab_CART_psMatched.csv')
 
-cart_list <- list(CART_Matched1,CART_Matched2,CART_Matched3,CART_Matched4)
+CART_Matched1$comparison_group <- "cps"
+CART_Matched2$comparison_group <- "psid"
+CART_Matched3$comparison_group <- "cps"
+CART_Matched4$comparison_group <- "psid"
+
+CART_Matched1$sample <- "lalonde"
+CART_Matched2$sample <- "lalonde"
+CART_Matched3$sample <- "dehejia_wahba"
+CART_Matched4$sample <- "dehejia_wahba"
+
+cart_list <- list(CART_Matched1 = "lalonde_cps",CART_Matched2 = "lalonde_psid",CART_Matched3 = "dehWab_cps",CART_Matched4 = "dehWab_psid") # dataframes with a list 
+
+Map(cbind, cart_list, model = "cart") # add column to identify the model used for matching
 
 # Random Forest 
 FOREST_Matched1 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/nswCps_lalonde_forest_psMatched.csv')
@@ -53,23 +97,30 @@ BOOST_Matched2 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/cau
 BOOST_Matched3 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/boost/nswCps_dehWab_boost_psMatched.csv')
 BOOST_Matched4 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/boost/nswPsid_dehWab_boost_psMatched.csv')
 
-boost_list <- list(BOOST_Matched1,BOOST_Matched2,BOOST_Matched3,BOOST_Matched4)
 
 # ANN 
 
 
+colnames(LOGIT_Matched1)
 
+# balance plots 
+
+loveplotfunct = treat ~ age + education. + black + hispanic + married + nodegree + re75 + re78 + propensity_score
+love.plot(loveplotfunct, data = LOGIT_Matched4,stat = c("mean.diffs", "variance.ratios"), thresholds = c(m = .1))
+
+
+
+
+
+
+# BOXPLOT prep ----
 # Create dataset of all propensity scores
 
 
-logit_lalonde_cps <- rbind(LOGIT_Matched1$treat,LOGIT_Matched1$propensity_score)
-logit_lalonde_cps <- rbind(LOGIT_Matched2$treat,LOGIT_Matched2$propensity_score)
-logit_dehWab_cps <- rbind(LOGIT_Matched3$treat,LOGIT_Matched3$propensity_score)
-logit_dehWab_cps <- rbind(LOGIT_Matched4$treat,LOGIT_Matched4$propensity_score)
-logit 
+logit_list[["lalonde_cps"]]
 
 # Create boxplots 
-ggplot(BOOST_Matched1, 
+ggplot(, 
        aes( y=propensity_score,x=as.factor(treat),
             fill=as.factor(treat))) + 
   stat_boxplot(geom ='errorbar',width = 0.2) + 
