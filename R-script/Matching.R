@@ -46,6 +46,7 @@ m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "n
 m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "nearest", distance = logitUndajusted4$propensity_score,caliper = caliper4, replace = FALSE)
 
 
+
 # LOGIT - balance plots
 balance_plot_logit1 <- love.plot(m_out_logit1,
                                  stat = c("mean.diffs"),
@@ -55,10 +56,10 @@ balance_plot_logit1 <- love.plot(m_out_logit1,
                                  line =TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","black"),
-                                 sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
         xlab("Lalonde's subsample with CPS controls")+
         theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -79,10 +80,10 @@ balance_plot_logit2 <- love.plot(m_out_logit2,
                                  line = TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","red"),
-                                 sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -103,10 +104,10 @@ balance_plot_logit3 <- love.plot(m_out_logit3,
                                  line =TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","black"),
-                                 sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -127,10 +128,10 @@ balance_plot_logit4 <- love.plot(m_out_logit4,
                                  line = TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","red"),
-                                 sample.names = c("PSID - adjusted", "PSID - unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with PSID control")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -199,10 +200,10 @@ balance_plot_cart1 <- love.plot(m_out_cart1,
                                  line =TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","black"),
-                                 sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's subsample with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -223,10 +224,10 @@ balance_plot_cart2 <- love.plot(m_out_cart2,
                                  line = TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","red"),
-                                 sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -247,10 +248,10 @@ balance_plot_cart3 <- love.plot(m_out_cart3,
                                  line =TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","black"),
-                                 sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -271,10 +272,10 @@ balance_plot_cart4 <- love.plot(m_out_cart4,
                                  line = TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle"),
+                                 shapes = c("circle filled", "circle filled"),
                                  thresholds = c(m = .1),
-                                 #colors = c("black","red"),
-                                 sample.names = c("PSID - adjusted", "PSID - unadjusted"))+
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with PSID control")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -335,10 +336,10 @@ balance_plot_forest1 <- love.plot(m_out_forest1,
                                 line =TRUE, 
                                 stars = "raw",
                                 size = 3.5,
-                                shapes = c("circle filled", "circle"),
+                                shapes = c("circle filled", "circle filled"),
                                 thresholds = c(m = .25),
-                                #colors = c("black","black"),
-                                sample.names = c("adjusted", "unadjusted"))+
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's subsample with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -359,10 +360,10 @@ balance_plot_forest2 <- love.plot(m_out_forest2,
                                 line = TRUE, 
                                 stars = "raw",
                                 size = 3.5,
-                                shapes = c("circle filled", "circle"),
+                                shapes = c("circle filled", "circle filled"),
                                 thresholds = c(m = .25),
-                                #colors = c("black","red"),
-                                sample.names = c("adjusted", "unadjusted"))+
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -383,10 +384,10 @@ balance_plot_forest3 <- love.plot(m_out_forest3,
                                 line =TRUE, 
                                 stars = "raw",
                                 size = 3.5,
-                                shapes = c("circle filled", "circle"),
+                                shapes = c("circle filled", "circle filled"),
                                 thresholds = c(m = .25),
-                                #colors = c("black","black"),
-                                sample.names = c("adjusted", "unadjusted"))+
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -407,10 +408,10 @@ balance_plot_forest4 <- love.plot(m_out_forest4,
                                 line = TRUE, 
                                 stars = "raw",
                                 size = 3.5,
-                                shapes = c("circle filled", "circle"),
+                                shapes = c("circle filled", "circle filled"),
                                 thresholds = c(m = .25),
-                                #colors = c("black","red"),
-                                sample.names = c("PSID - adjusted", "PSID - unadjusted"))+
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with PSID control")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -471,10 +472,10 @@ balance_plot_boost1 <- love.plot(m_out_boost1,
                                   line =TRUE, 
                                   stars = "raw",
                                   size = 3.5,
-                                  shapes = c("circle filled", "circle"),
+                                  shapes = c("circle filled", "circle filled"),
                                   thresholds = c(m = .25),
-                                  #colors = c("black","black"),
-                                  sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's subsample with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -495,10 +496,10 @@ balance_plot_boost2 <- love.plot(m_out_boost2,
                                   line = TRUE, 
                                   stars = "raw",
                                   size = 3.5,
-                                  shapes = c("circle filled", "circle"),
+                                  shapes = c("circle filled", "circle filled"),
                                   thresholds = c(m = .25),
-                                  #colors = c("black","red"),
-                                  sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -519,10 +520,10 @@ balance_plot_boost3 <- love.plot(m_out_boost3,
                                   line =TRUE, 
                                   stars = "raw",
                                   size = 3.5,
-                                  shapes = c("circle filled", "circle"),
+                                  shapes = c("circle filled", "circle filled"),
                                   thresholds = c(m = .25),
-                                  #colors = c("black","black"),
-                                  sample.names = c("adjusted", "unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -543,10 +544,10 @@ balance_plot_boost4 <- love.plot(m_out_boost4,
                                   line = TRUE, 
                                   stars = "raw",
                                   size = 3.5,
-                                  shapes = c("circle filled", "circle"),
+                                  shapes = c("circle filled", "circle filled"),
                                   thresholds = c(m = .25),
-                                  #colors = c("black","red"),
-                                  sample.names = c("PSID - adjusted", "PSID - unadjusted"))+
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia & Wahba's subsample with PSID control")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -814,6 +815,7 @@ ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 # Divide propensity scores into five strata using quantiles 
+
 quantiles1 <- quantile(LogitMatched1$propensity_score,prob = seq(0,1,1/5))
 LogitMatched1$strata <- cut(LogitMatched1$propensity_score, breaks = quantiles1,include.lowest = TRUE)
 
@@ -825,19 +827,19 @@ levels(LogitMatched1$strata) <- 1:length(levels(LogitMatched1$strata )) # rename
 xtabs(~LogitMatched1$treat+LogitMatched1$strata)  # cs met 
 
 
+# Check covariate balance with MatchIt
 
+forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + re78 + propensity_score
+forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + re78 + propensity_score 
 
-logitMatched2 
-logitmatched3 
-logitMatched4
+covariates <- c("treat","age","education.","black","hispanic","married","nodegree","re75","re78")
+covariates_dehWab <- c("treat","age","education.","black","hispanic","married","nodegree","re74","re75","re78")
 
+LogitMatched1[c("propensity_score","strata","treat")]
 
-
-
-
-
-
-
+balance_formula1 <- paste(covariates , collapse  =  "+")
+balance_formula2 <- paste(covariates_dehWab , collapse = "+")
+stratification <- matchit()
 
 
 
