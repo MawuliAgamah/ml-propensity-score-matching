@@ -4,7 +4,9 @@ library("MatchIt") # Matching
 library("cobalt") #  covariate balance
 library("gridExtra")
 library('ggpubr')
+library('haven')
 
+options(scipen=999)
 set.seed(1234)
 # KEY 
 # 1 - nsw treated + cps control  (lalonde's original sample)
@@ -1062,9 +1064,8 @@ forumla1
 #m_out_ann4 
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-# WIP - Guido imbens (2014) stratification_algorithm
+# WIP - Guido Imben's (2014) stratification_algorithm
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
 # Create strata based on propensity score 
@@ -1222,57 +1223,40 @@ MatchBalance(forumla1, data=stratifiedMatch_logit1[stratifiedMatch_logit1$quanti
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 # Treatment effect estimation 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-library(haven)
-# ATE with no control
-
-
-
-within.strata.normalised.difference <- function()
-
-
-
-estimate_ATE<-fucntion(stratified_data,subsample){
-  
-  
-  
-}
 
 # Benchmark experimental data 
 benchmark.data <- read_dta('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/nsw.dta')
 benchmark.experimental.data <- subset(benchmark.data,select = -c(data_id))
 unmatched.data.psid.dehwab <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/unmatched data/Quasi_NswPsid_dehWab.csv')
 
-# Benchmark quasi matching with match It package 
-m <- matchit(treat~
-               age +
-               agesq + 
-               education. + 
-               educsq + 
-               black + 
-               hispanic + 
-               married + 
-               nodegree + 
-               re75 + 
-               re75 +
-               u74+
-               u75, 
-             data = 
-               unmatched.data.cps.lalonde,
-             caliper = 0.05,
-             method = "nearest",
-             distance = "logit")
+# Benchmark for matching with match It package , nearest neighbor matching and logit propensity scores 
+nn_logit_benchmark <- matchit(treat~
+                              age + agesq + 
+                              education. + educsq +  black + 
+                              hispanic + married + nodegree +
+                              re75 + re75 + u74+ u75, data =  unmatched.data.cps.lalonde,
+                              caliper = 0.05, method = "nearest",distance = "logit")
 
 
-logitstrata1 <- stratifiedMatch_logit1[stratifiedMatch_logit1$quantile==1,]
-logitstrata2 <- stratifiedMatch_logit1[stratifiedMatch_logit1$quantile==2,]
-logitstrata3 <- stratifiedMatch_logit1[stratifiedMatch_logit1$quantile==3,]
+# Function to estimate ATE pooled across strata 
+`simple_ate_pooled_estimator <-function(stratified_data){
+  estimates <- list()
+  for(i in unique(stratified_data$quantile)){
+    block <- stratified_data[stratified_data$quantile==i,]
+    Y_t <- block$re78[block$treat==1]
+    Y_c <- block$re78[block$treat==0]
+    n_t <- table(Y_t) %>% sum()
+    n_c <- table(Y_c) %>% sum()
+    tor <- sum(Y_t/n_t)-sum(Y_c/n_c)
+    estimates[[i]]<-tor
+    } 
+  return(Reduce("+",estimates))
 
-lm(re78 ~ treat ,logitstrata1)
-lm(re78 ~ treat ,logitstrata2)
-lm(re78 ~ treat ,logitstrata2)
+}
+
+simple_ate_pooled_estimator(stratifiedMatch_forest1)
 
 
-options(scipen=999)
 summary(lm(re78 ~ treat + age + agesq + education. + nodegree + black + hispanic+re74+re75 ,match.data(m)))
 
 benchmark.experimental.data$agesq = benchmark.experimental.data$age*benchmark.experimental.data$age
@@ -1284,10 +1268,8 @@ summary(lm(re78 ~ treat +
             benchmark.experimental.data))
 
 stratifiedMatch_cart2$agesq = stratifiedMatch_cart2$age*stratifiedMatch_cart2$age
-summary(lm(re78 ~ treat + age + agesq + education. + nodegree + black + hispanic+re75 ,stratifiedMatch_cart2))
 
-
-
+summary(lm(re78 ~ treat ,logitstrata1))
 
 
 
