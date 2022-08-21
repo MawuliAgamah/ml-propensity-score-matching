@@ -5,7 +5,9 @@ library("cobalt") #  covariate balance
 library("gridExtra")
 library('ggpubr')
 library('haven')
-
+library ('gmodels')
+library ('MASS')
+library('dplyr')
 options(scipen=999)
 set.seed(1234)
 # KEY 
@@ -31,28 +33,18 @@ logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/cau
 logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT.csv')
 logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT.csv')
 
-logitUndajusted1$comparison_group <- "cps"
-logitUndajusted2$comparison_group <- "psid"
-logitUndajusted3$comparison_group <- "cps"
-logitUndajusted4$comparison_group <- "psid"
 
-logitUndajusted1$sample <- "lalonde"
-logitUndajusted2$sample <- "lalonde"
-logitUndajusted3$sample <- "dehejia_wahba"
-logitUndajusted4$sample <- "dehejia_wahba"
 
-forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + re78 + propensity_score
-forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + re78 + propensity_score 
+forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + propensity_score
+forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + + propensity_score
 
-caliper1 = sd(logitUndajusted1$propensity_score, na.rm = FALSE)*0.25
-caliper2 = sd(logitUndajusted2$propensity_score, na.rm = FALSE)*0.25
-caliper3 = sd(logitUndajusted3$propensity_score, na.rm = FALSE)*0.25
-caliper4 = sd(logitUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "genetic",distance = logitUndajusted1$propensity_score,caliper = 0.25,replace =  TRUE,pop.size = 50)
-m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_score,caliper = 0.25, replace =  TRUE,pop.size = 50)
-m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_score,caliper = 0.25,replace =  TRUE,pop.size = 50)
-m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_score,caliper = 0.25, replace =  TRUE,pop.size = 50)
+m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "genetic",distance = logitUndajusted1$propensity_logit,caliper = 0.25,replace =  TRUE,pop.size = 50)
+
+
+m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_logit,caliper = 0.25, replace =  TRUE,pop.size = 50)
+m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_logit,caliper = 0.25,replace =  TRUE,pop.size = 50)
+m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_logit,caliper = 0.25, replace =  TRUE,pop.size = 50)
 
 # CART 
 cartUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswCps_lalonde_ps_unmatched_CART.csv')
@@ -721,7 +713,7 @@ ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 #EQQ plot's
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
-plot(m_out_ann2, type = "qq", interactive = FALSE,
+plot(m_out_logit1, type = "qq", interactive = FALSE,
      which.xs = c("age","education.","re75"))
 
 
@@ -1074,9 +1066,6 @@ library(dplyr)
 library(gmodels)
 
 
-# Recursive stratification to ensure there no untreated unit's in each strata
-# This could be improved upon to also statistically test for common support
-
 x <- match.data(m_out_logit1)
 #x <- match.data(m)
 y$distance
@@ -1137,30 +1126,57 @@ imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
 # Sub classification
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
+# Recursive stratification to ensure there is always at least 1 treated unit in each strata.
+# This could be improved upon to better test for common support (mean diff or statistically)
 stratification_function <- function(matchit_object,strata){
-  
+
   # Begin with 5 strata
   if(strata == 5){
-      data <- match.data(matchit_object)
-      data = data %>% mutate(quantile = ntile(propensity_score, strata))
-      x <- CrossTable(data$treat, data$quantile)
+      data <- match.data(matchit_object) # matchit object to dataframe 
+      data = data %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+      x <- CrossTable(data$treat, data$quantile) # summary of strata
           if (0 %in% x$t){ # check common support
-            return(stratification_function(data,strata-1)) # if common support not met in a strata, run function again
+            return(stratification_function(data,strata-1)) # if common support not met in a strata, run the function again and reduce number of strata 
           }else{
             return(data) # return stratified data 
           }
     }else{
-      data = matchit_object %>% mutate(quantile = ntile(propensity_score, strata))
-      x <- CrossTable(data$treat, data$quantile)
-          if (0 %in% x$t){ # check common support
-              return(stratification_function(data,strata-1)) # if common support not met in a strata, run function again
+      # the same as above but now the object passed to the function is a dataframe and not a match it object
+      data = matchit_object %>% mutate(quantile = ntile(propensity_score, strata)) 
+      x <- CrossTable(data$treat, data$quantile)=
+          if (0 %in% x$t){ 
+              return(stratification_function(data,strata-1)) 
           }else{
             return(data) # return stratified data 
             }
     }
 }
 
+stratification_function <- function(matchit_object,strata){
+  
+
+    datain <- match.data(matchit_object) # matchit object to dataframe 
+    dataout = datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+    x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
+    
+      if (0 %in% x$t){ # check common support
+          datain <- match.data(matchit_object) # matchit object to dataframe 
+          dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-1)) # stratify
+          x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
+             if (0 %in% x$t){ # check common support
+               datain <- match.data(matchit_object) # matchit object to dataframe 
+               dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-2)) # stratify
+               x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
+               return(dataout)
+            }else{
+              return(dataout)
+            }
+          }
+}
+
+# Run function over mathched data set's
 # logit
+
 stratifiedMatch_logit1<- stratification_function(m_out_logit1,5)
 stratifiedMatch_logit2 <- stratification_function(m_out_logit2,5)
 stratifiedMatch_logit3 <- stratification_function(m_out_logit3,5)
@@ -1186,9 +1202,8 @@ stratifiedMatch_ann2 <- stratification_function(m_out_ann2,5)
 stratifiedMatch_ann3 <- stratification_function(m_out_ann3,5)
 stratifiedMatch_ann4 <- stratification_function(m_out_ann4,5)
 
-
+# summarise stratification 
 #logit
-
 CrossTable(stratifiedMatch_logit1$treat, stratifiedMatch_logit1$quantile)  # Treated and control counts
 CrossTable(stratifiedMatch_logit2$treat, stratifiedMatch_logit2$quantile)  # Treated and control counts
 CrossTable(stratifiedMatch_logit3$treat, stratifiedMatch_logit3$quantile)  # Treated and control counts
@@ -1239,7 +1254,7 @@ nn_logit_benchmark <- matchit(treat~
 
 
 # Function to estimate ATE pooled across strata 
-`simple_ate_pooled_estimator <-function(stratified_data){
+simple_ate_pooled_estimator <-function(stratified_data){
   estimates <- list()
   for(i in unique(stratified_data$quantile)){
     block <- stratified_data[stratified_data$quantile==i,]
@@ -1254,13 +1269,14 @@ nn_logit_benchmark <- matchit(treat~
 
 }
 
-simple_ate_pooled_estimator(stratifiedMatch_forest1)
+simple_ate_pooled_estimator(stratifiedMatch_logit1)
+
+# # # Linear regressions 
+
+benchmark.experimental.data$agesq = benchmark.experimental.data$age*benchmark.experimental.data$age # age squared 
 
 
-summary(lm(re78 ~ treat + age + agesq + education. + nodegree + black + hispanic+re74+re75 ,match.data(m)))
-
-benchmark.experimental.data$agesq = benchmark.experimental.data$age*benchmark.experimental.data$age
-# benchmark 
+# Experimental benchmark 
 summary(lm(re78 ~ treat + 
              age + agesq +
              education + nodegree + 
@@ -1269,9 +1285,12 @@ summary(lm(re78 ~ treat +
 
 stratifiedMatch_cart2$agesq = stratifiedMatch_cart2$age*stratifiedMatch_cart2$age
 
+# matching logit benchmark 
+summary(lm(re78 ~ treat + age + agesq + education. + nodegree + black + hispanic+re74+re75 ,match.data(m)))
+
 summary(lm(re78 ~ treat ,logitstrata1))
 
-
+# with controls 
 
 
 
