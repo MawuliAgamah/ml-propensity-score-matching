@@ -1,4 +1,4 @@
-# An Examination of Social Intervention Programmes  through Machine Learning 
+# Removing unobserved confounding with propensity scores and artificial intelligence 
  
 <p> The files are structured as follows: </p>
 
