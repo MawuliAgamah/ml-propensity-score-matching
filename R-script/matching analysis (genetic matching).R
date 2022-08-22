@@ -8,6 +8,8 @@ library('haven')
 library ('gmodels')
 library ('MASS')
 library('dplyr')
+library('MatchItSE')
+library('survey')
 options(scipen=999)
 set.seed(1234)
 # KEY 
@@ -42,10 +44,10 @@ forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re
 forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + propensity_score
 
 
-m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "genetic",distance = logitUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 1000)
-m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_logit,caliper = caliper2, replace =  TRUE,pop.size = 1000)
-m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 1000)
-m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_logit,caliper = caliper4, replace =  TRUE,pop.size = 1000)
+m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "genetic",distance = logitUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_logit,caliper = caliper2, replace =  TRUE,pop.size = 50)
+m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_logit,caliper = caliper4, replace =  TRUE,pop.size = 50)
 
 # CART 
 cartUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswCps_lalonde_ps_unmatched_CART.csv')
@@ -53,13 +55,22 @@ cartUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/caus
 cartUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswCps_dehWab_ps_unmatched_CART.csv')
 cartUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswPsid_dehWab_ps_unmatched_CART.csv')
 
-m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "genetic", distance = cartUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 1000)
-m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "genetic", distance = cartUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 1000)
-m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "genetic", distance = cartUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 1000)
-m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "genetic", distance = cartUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 1000)
+
+
+
+
+
+caliper1 = sd(cartUndajusted1$propensity_logit, na.rm = FALSE)*0.25
+caliper2 = sd(cartUndajusted2$propensity_logit, na.rm = FALSE)*0.25
+caliper3 = sd(cartUndajusted3$propensity_logit, na.rm = FALSE)*0.25
+caliper4 = sd(cartUndajusted4$propensity_logit, na.rm = FALSE)*0.25
+
+m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "genetic",distance = cartUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "genetic", distance = cartUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "genetic", distance = cartUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "genetic", distance = cartUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # Forest
-
 forestUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswCps_lalonde_ps_unmatched_FOREST.csv')
 forestUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswPsid_lalonde_ps_unmatched_FOREST.csv')
 forestUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswCps_dehWab_ps_unmatched_FOREST.csv')
@@ -70,10 +81,10 @@ caliper2 = sd(forestUndajusted2$propensity_logit, na.rm = FALSE)*0.25
 caliper3 = sd(forestUndajusted3$propensity_logit, na.rm = FALSE)*0.25
 caliper4 = sd(forestUndajusted4$propensity_logit, na.rm = FALSE)*0.25
 
-m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic", distance = forestUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 1000)
-m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "genetic", distance = forestUndajusted2$propensity_logit,caliper =caliper2,replace =  TRUE,pop.size = 1000)
-m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "genetic", distance = forestUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 1000)
-m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "genetic", distance = forestUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 1000)
+m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic",distance = forestUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "genetic", distance = forestUndajusted2$propensity_logit,caliper =caliper2,replace =  TRUE,pop.size = 50)
+m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "genetic", distance = forestUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "genetic", distance = forestUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # Boost 
 
@@ -88,10 +99,10 @@ caliper2 = sd(boostUndajusted2$propensity_logit, na.rm = FALSE)*0.25
 caliper3 = sd(boostUndajusted3$propensity_logit, na.rm = FALSE)*0.25
 caliper4 = sd(boostUndajusted4$propensity_logit, na.rm = FALSE)*0.25
 
-m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "genetic", distance = boostUndajusted1$propensity_logit,caliper =caliper1,replace =  TRUE,pop.size = 1000)
-m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "genetic", distance = boostUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 1000)
-m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "genetic", distance = boostUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 1000)
-m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "genetic", distance = boostUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 1000)
+m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "genetic", distance = boostUndajusted1$propensity_logit,caliper =caliper1,replace =  TRUE,pop.size = 50)
+m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "genetic", distance = boostUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "genetic", distance = boostUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "genetic", distance = boostUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # ANN
 # Load unadjusted dataset 
@@ -105,10 +116,10 @@ caliper2 = sd(annUndajusted2$propensity_logit, na.rm = FALSE)*0.25
 caliper3 = sd(annUndajusted3$propensity_logit, na.rm = FALSE)*0.25
 caliper4 = sd(annUndajusted4$propensity_logit, na.rm = FALSE)*0.25
 
-m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "genetic", distance = annUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 1000)
-m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "genetic", distance = annUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 1000)
-m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "genetic", distance = annUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 1000)
-m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "genetic", distance = annUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 1000)
+m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "genetic", distance = annUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "genetic", distance = annUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "genetic", distance = annUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "genetic", distance = annUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # Matching basic summary
@@ -673,7 +684,7 @@ ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 #EQQ plot's
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
-plot(m_out_logit1, type = "qq", interactive = FALSE,
+plot(m_out_ann3, type = "qq", interactive = FALSE,
      which.xs = c("age","education.","re75"))
 
 
@@ -1017,7 +1028,7 @@ forumla1
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-# WIP - Guido Imben's (2014) stratification_algorithm
+# WIP - Guido Imbens (2014) stratification_algorithm
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
 # Create strata based on propensity score 
@@ -1083,40 +1094,40 @@ imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
 # t-statistic 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-# Sub classification
+# WIP - Sub classification
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
 # Recursive stratification to ensure there is always at least 1 treated unit in each strata.
 # This could be improved upon to better test for common support (mean diff or statistically)
-stratification_function <- function(matchit_object,strata){
+#stratification_function <- function(matchit_object,strata){
 
   # Begin with 5 strata
-  if(strata == 5){
-      data <- match.data(matchit_object) # matchit object to dataframe 
-      data = data %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
-      x <- CrossTable(data$treat, data$quantile) # summary of strata
-          if (0 %in% x$t){ # check common support
-            return(stratification_function(data,strata-1)) # if common support not met in a strata, run the function again and reduce number of strata 
-          }else{
-            return(data) # return stratified data 
-          }
-    }else{
+  #if(strata == 5){
+   #   data <- match.data(matchit_object) # matchit object to dataframe 
+    #  data = data %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+     # x <- CrossTable(data$treat, data$quantile) # summary of strata
+      #    if (0 %in% x$t){ # check common support
+       #     return(stratification_function(data,strata-1)) # if common support not met in a strata, run the function again and reduce number of strata 
+        #  }else{
+         #   return(data) # return stratified data 
+          #}
+    #}else{
       # the same as above but now the object passed to the function is a dataframe and not a match it object
-      data = matchit_object %>% mutate(quantile = ntile(propensity_score, strata)) 
-      x <- CrossTable(data$treat, data$quantile)=
-          if (0 %in% x$t){ 
-              return(stratification_function(data,strata-1)) 
-          }else{
-            return(data) # return stratified data 
-            }
-    }
-}
+     # data = matchit_object %>% mutate(quantile = ntile(propensity_score, strata)) 
+      #x <- CrossTable(data$treat, data$quantile)=
+       #   if (0 %in% x$t){ 
+        #      return(stratification_function(data,strata-1)) 
+         # }else{
+           # return(data) # return stratified data 
+          #  }
+#    }
+#}
 
 stratification_function <- function(matchit_object,strata){
   
 
     datain <- match.data(matchit_object) # matchit object to dataframe 
-    dataout = datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+    dataout <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
     x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
     
       if (0 %in% x$t){ # check common support
@@ -1189,31 +1200,6 @@ CrossTable(stratifiedMatch_ann2$treat,stratifiedMatch_ann2$quantile)  # Treated 
 CrossTable(stratifiedMatch_ann3$treat,stratifiedMatch_ann3$quantile)  # Treated and control counts
 CrossTable(stratifiedMatch_ann4$treat,stratifiedMatch_ann4$quantile)  # Treated and control counts
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-# Within strata balance tests
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-MatchBalance(forumla1, data=stratifiedMatch_logit1[stratifiedMatch_logit1$quantile == 3,],nboots=500)
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-# Treatment effect estimation 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-library(MatchItSE)
-# Benchmark experimental data 
-benchmark.data <- read_dta('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/nsw.dta')
-benchmark.experimental.data <- subset(benchmark.data,select = -c(data_id))
-unmatched.data.psid.dehwab <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/unmatched data/Quasi_NswPsid_dehWab.csv')
-# Benchmark for matching with match It package , nearest neighbor matching and logit propensity scores 
-nn_logit_benchmark <- matchit(treat~
-                              age + agesq + 
-                              education. + educsq +  black + 
-                              hispanic + married + nodegree +
-                              re75 + re75 + u74+ u75, data =  unmatched.data.cps.lalonde,
-                              caliper = 0.05, method = "nearest",distance = "logit")
-
-
-
-
 # Function to estimate ATT pooled across strata 
 simple_att_pooled_estimator <-function(stratified_data){
   estimates <- list()
@@ -1225,56 +1211,241 @@ simple_att_pooled_estimator <-function(stratified_data){
     n_c <- table(Y_c) %>% sum()
     tor <- (sum(Y_t)-sum(Y_c))/n_t
     estimates[[i]]<-tor
-    } 
+  } 
   return(Reduce("+",estimates))
-
+  
 }
 
-simple_ate_pooled_estimator(stratifiedMatch_logit1)
+simple_att_pooled_estimator(stratifiedMatch_logit2)
+stratifiedMatch_logit1
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
+# Within strata balance tests
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
+MatchBalance(forumla1, data=stratifiedMatch_logit1[stratifiedMatch_logit1$quantile == 3,],nboots=500)
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
+# Treatment effect estimation 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
-# # # Linear regressions 
 
-# No controls 
+# Benchmark experimental data 
+benchmark.data <- read_dta('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/nsw.dta')
+benchmark.data2 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/nsw_dehejia_wahba.csv')
+benchmark.experimental.data <- subset(benchmark.data,select = -c(data_id))
+unmatched.data.psid.dehwab <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/unmatched data/Quasi_NswPsid_dehWab.csv')
 benchmark.experimental.data$agesq = benchmark.experimental.data$age*benchmark.experimental.data$age # age squared 
 
-# Experimental benchmark 
-summary(lm(re78 ~ treat + 
-             age + agesq +
-             education + nodegree + 
-             black + hispanic+re75 ,
-            benchmark.experimental.data))
-
-stratifiedMatch_cart2$agesq = stratifiedMatch_cart2$age*stratifiedMatch_cart2$age
-
-# matching logit benchmark 
-summary(lm(re78 ~ treat + age + agesq + education. + nodegree + black + hispanic+re74+re75 ,match.data(m)))
-
-# Logit
 
 
-# Cart
-
-# Forest
-
-# Boost
-
-# ANN
-
+# Benchmark for matching with match It package , nearest neighbor matching and logit propensity scores 
+nn_logit_matching_benchmark <- matchit(treat~age + agesq + education. + educsq +  black + 
+                              hispanic + married + nodegree +
+                              re75 + re75 + u74+ u75, data =  unmatched.data.cps.lalonde,
+                              caliper = 0.05, method = "nearest",distance = "logit")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# # # Linear regressions - no controls
+specification_1 = re78 ~ treat
+
+
+# Experimental benchmark 
+summary(lm(specification_1 ,benchmark.experimental.data))
+summary(lm(specification_1 ,benchmark.data2))
+
+# matching logit benchmark 
+
+# Logit
+summary(lm(re78 ~ treat ,match.data(m_out_logit1)))
+summary(lm(re78 ~ treat ,match.data(m_out_logit2)))
+summary(lm(re78 ~ treat ,match.data(m_out_logit3)))
+summary(lm(re78 ~ treat ,match.data(m_out_logit4)))
+
+# Cart
+summary(lm(re78 ~ treat ,match.data(m_out_cart1)))
+summary(lm(re78 ~ treat ,match.data(m_out_cart2)))
+summary(lm(re78 ~ treat ,match.data(m_out_cart3)))
+summary(lm(re78 ~ treat ,match.data(m_out_cart4)))
+# Forest
+summary(lm(re78 ~ treat ,match.data(m_out_forest1)))
+summary(lm(re78 ~ treat ,match.data(m_out_forest2)))
+summary(lm(re78 ~ treat ,match.data(m_out_forest3)))
+summary(lm(re78 ~ treat ,match.data(m_out_forest4)))
+# Boost
+summary(lm(re78 ~ treat ,match.data(m_out_boost1)))
+summary(lm(re78 ~ treat ,match.data(m_out_boost2)))
+summary(lm(re78 ~ treat ,match.data(m_out_boost3)))
+summary(lm(re78 ~ treat ,match.data(m_out_boost4)))
+
+# ANN
+summary(lm(re78 ~ treat ,match.data(m_out_ann1)))
+summary(lm(re78 ~ treat ,match.data(m_out_ann2)))
+summary(lm(re78 ~ treat ,match.data(m_out_ann3)))
+summary(lm(re78 ~ treat ,match.data(m_out_ann4)))
+
+# Linear regression with controls 
+specification_2 = re78 ~ treat + age + agesq + nodegree+black+hispanic + re75
+specification_3 = re78 ~ treat + age + agesq + nodegree+black+hispanic + re74 + re74
+# Experimental benchmark 
+summary(lm(specification_2 ,benchmark.experimental.data))
+summary(lm(specification_3 ,benchmark.data2))
+
+regression_controls <- function(data,ref_specification){
+  data = match.data(data)
+  data$agesq = data$age*data$age
+  return(summary(lm(ref_specification , data)))
+  #return(lm(ref_specification , data))
+  
+}
+
+
+# Logit
+regression_controls(m_out_logit1,specification_2)
+regression_controls(m_out_logit2,specification_2)
+regression_controls(m_out_logit3,specification_3)
+regression_controls(m_out_logit4,specification_3)
+
+# Cart
+regression_controls(m_out_cart1,specification_2)
+regression_controls(m_out_cart2,specification_2)
+regression_controls(m_out_cart3,specification_3)
+regression_controls(m_out_cart4,specification_3)
+# Forest
+regression_controls(m_out_forest1,specification_2)
+regression_controls(m_out_forest2,specification_2)
+regression_controls(m_out_forest3,specification_3)
+regression_controls(m_out_forest4,specification_3)
+# Boost
+regression_controls(m_out_boost1,specification_2)
+regression_controls(m_out_boost2,specification_2)
+regression_controls(m_out_boost3,specification_3)
+regression_controls(m_out_boost4,specification_3)
+
+# ANN
+regression_controls(m_out_ann1,specification_2)
+regression_controls(m_out_ann2,specification_2)
+regression_controls(m_out_ann3,specification_3)
+regression_controls(m_out_ann4,specification_3)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ----
 # Addide and Imebns methods 
 
-att(obj = m_out_logit1, Y = logitUndajusted1$re78)
-abadie_imbens_se(obj = m_out_logit1, Y = logitUndajusted1$re78)
+x <- att(obj = m_out_logit1, Y = logitUndajusted1$re78)
+#y <- abadie_imbens_se(m_out_logit1, Y = logitUndajusted1$re78, max.iter = 1000)
+#n <- nrow(logitUndajusted1)
+#sem <- y[2] # standard error 
+#sigma_sd <- sqrt(n)*sem #standard deviation 
+#mean(logitUndajusted1$re78)
+
+abadie_imbens_estimator_with_bootstrapSE <- function(object,dataset){
+  
+  x <- att(obj = object, Y = dataset$re78)
+  y <- bootstrap.se(object, Y = dataset$re78, max.iter = 1000)
+  y <- y[[2]]
+  return(cat("ate:",x,"se:",y))
+  
+}
+
+abadie_imbens_estimator(m_out_logit1,logitUndajusted1)
+abadie_imbens_estimator(m_out_logit2,logitUndajusted2)
+abadie_imbens_estimator(m_out_logit3,logitUndajusted3)
+abadie_imbens_estimator(m_out_logit4,logitUndajusted4)
+
+abadie_imbens_estimator(m_out_cart1,cartUndajusted1)
+abadie_imbens_estimator(m_out_cart2,cartUndajusted2)
+abadie_imbens_estimator(m_out_cart3,cartUndajusted3)
+abadie_imbens_estimator(m_out_cart4,cartUndajusted4)
+
+abadie_imbens_estimator(m_out_forest1,forestUndajusted1)
+abadie_imbens_estimator(m_out_forest2,forestUndajusted2)
+abadie_imbens_estimator(m_out_forest3,forestUndajusted3)
+abadie_imbens_estimator(m_out_forest4,forestUndajusted4)
+
+abadie_imbens_estimator(m_out_boost1,boostUndajusted1)
+abadie_imbens_estimator(m_out_boost2,boostUndajusted2)
+abadie_imbens_estimator(m_out_boost3,boostUndajusted3)
+abadie_imbens_estimator(m_out_boost4,boostUndajusted4)
 
 
+abadie_imbens_estimator(m_out_ann1, annUndajusted1)
+abadie_imbens_estimator(m_out_ann2,annUndajusted2)
+abadie_imbens_estimator(m_out_ann3,annUndajusted3)
+abadie_imbens_estimator(m_out_ann4,annUndajusted4)
 
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
+# Horowitz-Thompson Weighted ATT estimator
 
+
+#  STRATIEFIED Weighted ATT
+
+stratification_function <- function(matchit_object,strata){
+
+    if(is.data.frame(matchit_object)){
+      dataout1 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+      x <- CrossTable(dataout1$treat, dataout1$quantile) # summary of strata
+        if (0 %in% x$t){return(stratification_function(dataout1,strata-1))}
+          else{return(dataout1)}
+    }else{
+      datain <- match.data(matchit_object) # match it object to data frame 
+      dataout2 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+      x2 <- CrossTable(dataout2$treat, dataout2$quantile) # summary of strata
+      if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support
+         else{return(dataout2)}
+}}
+
+# weighted glm estimator 
+weighted_regression_estimator <- function(matchit_object){
+  options(survey.lonely.psu = 'adjust')
+  stratified_data <- stratification_function(matchit_object,5)
+  stratified_data$ID <- seq.int(nrow(stratified_data)) # create id column
+  surveyDesign1 <- svydesign(ids =~ID,strata=~quantile,weights=~weights,data = stratified_data,nest=F) # create survey design
+  # replicate weight's for bootstrapped standard errors
+  surveyDesign1.bootstrap <- as.svrepdesign(surveyDesign1,type=c("bootstrap"),replicates=100)
+ 
+  # weighted means estimator 
+  #weightedmeans <- svyby(formula=~re78,by=~treat,design=surveyDesign1, FUN=svymean,covmat=TRUE)
+  #ATT_weighted_means <- svycontrast(weightedMeans, contrasts=c(-1,1))  # mean of treated-mean control 
+  #ATT_weighted_means
+  #re-estimate the ATT with regression, but this time obtain standard errors with bootstrapping
+  outcomeModel2006Boot <- svyglm(re78~treat,surveyDesign1.bootstrap)
+  summary(outcomeModel2006Boot)
+  
+}
+  
+# Logit
+weighted_regression_estimator(m_out_logit1)
+weighted_regression_estimator(m_out_logit2)
+weighted_regression_estimator(m_out_logit3)
+weighted_regression_estimator(m_out_logit4)
+
+# Cart
+weighted_regression_estimator(m_out_cart1)
+weighted_regression_estimator(m_out_cart2)
+weighted_regression_estimator(m_out_cart3)
+weighted_regression_estimator(m_out_cart4)
+# Forest
+weighted_regression_estimator(m_out_forest1)
+weighted_regression_estimator(m_out_forest2)
+weighted_regression_estimator(m_out_forest3)
+weighted_regression_estimator(m_out_forest4)
+# Boost
+weighted_regression_estimator(m_out_boost1)
+weighted_regression_estimator(m_out_boost2)
+weighted_regression_estimator(m_out_boost3)
+weighted_regression_estimator(m_out_boost4)
+
+# ANN
+weighted_regression_estimator(m_out_ann1)
+weighted_regression_estimator(m_out_ann2)
+weighted_regression_estimator(m_out_ann3)
+weighted_regression_estimator(m_out_ann4)
+
+
+
+#bootstrap standard errors 
 
