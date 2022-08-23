@@ -1,4 +1,4 @@
-# Removing unobserved confounding with propensity scores and artificial intelligence 
+# Estimating the effect of intervention through artificial intelligence and propensity score matching
  
 <p> The files are structured as follows: </p>
 
