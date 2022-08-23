@@ -1095,56 +1095,48 @@ imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
 # t-statistic 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-# WIP - Sub classification
+#  Sub classification
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
 # Recursive stratification to ensure there is always at least 1 treated unit in each strata.
 # This could be improved upon to better test for common support (mean diff or statistically)
-#stratification_function <- function(matchit_object,strata){
-
-  # Begin with 5 strata
-  #if(strata == 5){
-   #   data <- match.data(matchit_object) # matchit object to dataframe 
-    #  data = data %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
-     # x <- CrossTable(data$treat, data$quantile) # summary of strata
-      #    if (0 %in% x$t){ # check common support
-       #     return(stratification_function(data,strata-1)) # if common support not met in a strata, run the function again and reduce number of strata 
-        #  }else{
-         #   return(data) # return stratified data 
-          #}
-    #}else{
-      # the same as above but now the object passed to the function is a dataframe and not a match it object
-     # data = matchit_object %>% mutate(quantile = ntile(propensity_score, strata)) 
-      #x <- CrossTable(data$treat, data$quantile)=
-       #   if (0 %in% x$t){ 
-        #      return(stratification_function(data,strata-1)) 
-         # }else{
-           # return(data) # return stratified data 
-          #  }
-#    }
-#}
-
 stratification_function <- function(matchit_object,strata){
   
+  if(is.data.frame(matchit_object)){
+    dataout1 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+    x <- CrossTable(dataout1$treat, dataout1$quantile) # summary of strata
+    if (0 %in% x$t){return(stratification_function(dataout1,strata-1))} # check common support , if not met call function again
+    else{return(dataout1)}
+  }else{
+    datain <- match.data(matchit_object) # match it object to data frame 
+    dataout2 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+    x2 <- CrossTable(dataout2$treat, dataout2$quantile) # summary of strata
+    if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support,if not met call function again
+    else{return(dataout2)}
+  }}
 
-    datain <- match.data(matchit_object) # matchit object to dataframe 
-    dataout <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
-    x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
+
+#stratification_function <- function(matchit_object,strata){
+  
+
+#    datain <- match.data(matchit_object) # matchit object to dataframe 
+#    x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
+#    dataout <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
     
-      if (0 %in% x$t){ # check common support
-          datain <- match.data(matchit_object) # matchit object to dataframe 
-          dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-1)) # stratify
-          x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
-             if (0 %in% x$t){ # check common support
-               datain <- match.data(matchit_object) # matchit object to dataframe 
-               dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-2)) # stratify
-               x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
-               return(dataout)
-            }else{
-              return(dataout)
-            }
-          }
-}
+#      if (0 %in% x$t){ # check common support
+#          datain <- match.data(matchit_object) # matchit object to dataframe 
+#          dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-1)) # stratify
+#          x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
+#             if (0 %in% x$t){ # check common support
+#               datain <- match.data(matchit_object) # matchit object to dataframe 
+#               dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-2)) # stratify
+#               x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
+#               return(dataout)
+#            }else{
+#              return(dataout)
+#            }
+#          }
+#}
 
 # Run function over mathched data set's
 # logit
@@ -1378,20 +1370,20 @@ abadie_imbens_estimator(m_out_ann4,annUndajusted4)
 
 #  STRATIEFIED Weighted ATT
 
-stratification_function <- function(matchit_object,strata){
+#stratification_function <- function(matchit_object,strata){
 
-    if(is.data.frame(matchit_object)){
-      dataout1 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
-      x <- CrossTable(dataout1$treat, dataout1$quantile) # summary of strata
-        if (0 %in% x$t){return(stratification_function(dataout1,strata-1))}
-          else{return(dataout1)}
-    }else{
-      datain <- match.data(matchit_object) # match it object to data frame 
-      dataout2 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
-      x2 <- CrossTable(dataout2$treat, dataout2$quantile) # summary of strata
-      if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support
-         else{return(dataout2)}
-}}
+#    if(is.data.frame(matchit_object)){
+#      dataout1 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+#      x <- CrossTable(dataout1$treat, dataout1$quantile) # summary of strata
+#        if (0 %in% x$t){return(stratification_function(dataout1,strata-1))}
+#          else{return(dataout1)}
+#    }else{
+#      datain <- match.data(matchit_object) # match it object to data frame 
+#      dataout2 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+#      x2 <- CrossTable(dataout2$treat, dataout2$quantile) # summary of strata
+#      if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support
+#         else{return(dataout2)}
+#}}
 
 # weighted glm estimator 
 weighted_regression_estimator <- function(matchit_object){
@@ -1440,7 +1432,4 @@ weighted_regression_estimator(m_out_ann2)
 weighted_regression_estimator(m_out_ann3)
 weighted_regression_estimator(m_out_ann4)
 
-
-
-#bootstrap standard errors 
 
