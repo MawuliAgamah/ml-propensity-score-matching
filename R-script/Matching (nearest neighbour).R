@@ -24,7 +24,7 @@ set.seed(1234)
 # LOGIT
 
 # un-adjusted logit data set's taken from python
-# When matching the default estimand for the match-it function is the ATT , which we use. 
+# When matching the default estimated for the match-it function is the ATT , which we use. 
 
 library('Matching')
 library('rgenoud')
@@ -984,17 +984,10 @@ ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/
 
 # Logit 
 
-
-
-
-
-
 #m_out_logit1 
 #m_out_logit2 
 #m_out_logit3 
 #m_out_logit4 
-
-
 
 
 # CART 
