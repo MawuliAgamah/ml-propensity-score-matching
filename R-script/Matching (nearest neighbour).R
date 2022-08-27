@@ -9,8 +9,11 @@ library ('MASS')
 library('dplyr')
 library('MatchItSE')
 library('survey')
+library('Matching')
+library('rgenoud')
 options(scipen=999)
 set.seed(1234)
+
 # KEY 
 # 1 - nsw treated + cps control  (lalonde's original sample)
 # 2 - nsw treated + psid control (lalonde's original sample)
@@ -26,8 +29,6 @@ set.seed(1234)
 # un-adjusted logit data set's taken from python
 # When matching the default estimated for the match-it function is the ATT , which we use. 
 
-library('Matching')
-library('rgenoud')
 
 logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT.csv')
 logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_lalonde_ps_unmatched_LOGIT.csv')
