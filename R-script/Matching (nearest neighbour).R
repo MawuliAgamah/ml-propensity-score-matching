@@ -42,21 +42,15 @@ trimming.funct <- function(dataset){
 
 }
 
-
-
-
-
 logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT.csv')
 logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_lalonde_ps_unmatched_LOGIT.csv')
 logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT.csv')
 logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT.csv')
 
-
 logitUndajusted1 <- trimming.funct(logitUndajusted1)
 logitUndajusted2 <- trimming.funct(logitUndajusted2)
 logitUndajusted3 <- trimming.funct(logitUndajusted3)
 logitUndajusted4 <- trimming.funct(logitUndajusted4)
-
 
 caliper1 = sd(logitUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(logitUndajusted2$propensity_logit, na.rm = FALSE)*0.25
@@ -85,7 +79,6 @@ cartUndajusted3 <- trimming.funct(cartUndajusted3)
 cartUndajusted4 <- trimming.funct(cartUndajusted4)
 
 
-
 caliper1 = sd(cartUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(cartUndajusted2$propensity_logit, na.rm = FALSE)*0.25
 caliper3 = sd(cartUndajusted3$propensity_logit, na.rm = FALSE)*0.25
@@ -106,8 +99,6 @@ forestUndajusted1 <- trimming.funct(forestUndajusted1)
 forestUndajusted2 <- trimming.funct(forestUndajusted2)
 forestUndajusted3 <- trimming.funct(forestUndajusted3)
 forestUndajusted4 <- trimming.funct(forestUndajusted4)
-
-
 
 caliper1 = sd(forestUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(forestUndajusted2$propensity_logit, na.rm = FALSE)*0.25
@@ -1383,8 +1374,6 @@ abadie_imbens_estimator(m_out_ann4,annUndajusted4)
 
 # Horowitz-Thompson Weighted ATT estimator
 
-
-
 # weighted glm estimator 
 weighted_regression_estimator <- function(matchit_object){
   options(survey.lonely.psu = 'adjust')
@@ -1394,11 +1383,7 @@ weighted_regression_estimator <- function(matchit_object){
   # replicate weight's for bootstrapped standard errors
   surveyDesign1.bootstrap <- as.svrepdesign(surveyDesign1,type=c("bootstrap"),replicates=100)
   
-  # weighted means estimator 
-  #weightedmeans <- svyby(formula=~re78,by=~treat,design=surveyDesign1, FUN=svymean,covmat=TRUE)
-  #ATT_weighted_means <- svycontrast(weightedMeans, contrasts=c(-1,1))  # mean of treated-mean control 
-  #ATT_weighted_means
-  #re-estimate the ATT with regression, but this time obtain standard errors with bootstrapping
+  #re-estimate the ATT with regression, with bootstrapped standard errors 
   outcomeModel2006Boot <- svyglm(re78~treat,surveyDesign1.bootstrap)
   summary(outcomeModel2006Boot)
   
