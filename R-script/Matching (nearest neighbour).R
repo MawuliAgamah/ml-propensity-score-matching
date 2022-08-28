@@ -15,10 +15,10 @@ options(scipen=999)
 set.seed(1234)
 
 # KEY 
-# 1 - nsw treated + cps control  (lalonde's original sample)
-# 2 - nsw treated + psid control (lalonde's original sample)
-# 3 - nsw treated + cps control  (dehejia & wahba sub-sample)
-# 4 - nsw treated + psid control (dehejia & wahba sub-sample)
+# 1 - nsw treated + CPS control  (Lalonde's original sample)
+# 2 - nsw treated + PSID control (Lalonde's original sample)
+# 3 - nsw treated + CPS control  (Dehejia & Wahba sub-sample)
+# 4 - nsw treated + PSID control (Dehejia & Wahba sub-sample)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # Load Data and match
@@ -29,19 +29,42 @@ set.seed(1234)
 # un-adjusted logit data set's taken from python
 # When matching the default estimated for the match-it function is the ATT , which we use. 
 
+trimming.funct <- function(dataset){
+  
+  treatedUnits <- dataset[dataset$treat==1,]
+  max_ps <- max(treatedUnits$propensity_score)
+  min_ps <- min(treatedUnits$propensity_score)
+  criteria_met_booleon <- between(dataset$propensity_score, min_ps, max_ps)
+  trimmed_df <- dataset[criteria_met_booleon,]
+  dropped_count <- nrow(dataset)- nrow(trimmed_df)
+  print (c("dropped:", dropped_count))
+  return(trimmed_df)
+
+}
+
+
+
+
 
 logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT.csv')
 logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_lalonde_ps_unmatched_LOGIT.csv')
 logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT.csv')
 logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT.csv')
 
+
+logitUndajusted1 <- trimming.funct(logitUndajusted1)
+logitUndajusted2 <- trimming.funct(logitUndajusted2)
+logitUndajusted3 <- trimming.funct(logitUndajusted3)
+logitUndajusted4 <- trimming.funct(logitUndajusted4)
+
+
 caliper1 = sd(logitUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(logitUndajusted2$propensity_logit, na.rm = FALSE)*0.25
 caliper3 = sd(logitUndajusted3$propensity_logit, na.rm = FALSE)*0.25
 caliper4 = sd(logitUndajusted4$propensity_logit, na.rm = FALSE)*0.25
 
-forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + propensity_score
-forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + propensity_score
+forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + propensity_logit
+forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + propensity_logit
 
 
 m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "nearest",ratio=1,distance = logitUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE)
@@ -54,6 +77,14 @@ cartUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/cau
 cartUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswPsid_lalonde_ps_unmatched_CART.csv')
 cartUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswCps_dehWab_ps_unmatched_CART.csv')
 cartUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswPsid_dehWab_ps_unmatched_CART.csv')
+
+
+cartUndajusted1 <- trimming.funct(cartUndajusted1)
+cartUndajusted2 <- trimming.funct(cartUndajusted2)
+cartUndajusted3 <- trimming.funct(cartUndajusted3)
+cartUndajusted4 <- trimming.funct(cartUndajusted4)
+
+
 
 caliper1 = sd(cartUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(cartUndajusted2$propensity_logit, na.rm = FALSE)*0.25
@@ -70,6 +101,13 @@ forestUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/c
 forestUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswPsid_lalonde_ps_unmatched_FOREST.csv')
 forestUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswCps_dehWab_ps_unmatched_FOREST.csv')
 forestUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswPsid_dehWab_ps_unmatched_FOREST.csv')
+
+forestUndajusted1 <- trimming.funct(forestUndajusted1)
+forestUndajusted2 <- trimming.funct(forestUndajusted2)
+forestUndajusted3 <- trimming.funct(forestUndajusted3)
+forestUndajusted4 <- trimming.funct(forestUndajusted4)
+
+
 
 caliper1 = sd(forestUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(forestUndajusted2$propensity_logit, na.rm = FALSE)*0.25
@@ -89,6 +127,12 @@ boostUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/ca
 boostUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/boost/unmatched/nswPsid_dehWab_ps_unmatched_BOOST.csv')
 
 
+boostUndajusted1 <- trimming.funct(boostUndajusted1)
+boostUndajusted2 <- trimming.funct(boostUndajusted2)
+boostUndajusted3 <- trimming.funct(boostUndajusted3)
+boostUndajusted4 <- trimming.funct(boostUndajusted4)
+
+
 caliper1 = sd(boostUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(boostUndajusted2$propensity_logit, na.rm = FALSE)*0.25
 caliper3 = sd(boostUndajusted3$propensity_logit, na.rm = FALSE)*0.25
@@ -105,6 +149,11 @@ annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/caus
 annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN.csv')
 annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN.csv')
 annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN.csv')
+
+annUndajusted1 <- trimming.funct(annUndajusted1)
+annUndajusted2 <- trimming.funct(annUndajusted2)
+annUndajusted3 <- trimming.funct(annUndajusted3)
+annUndajusted4 <- trimming.funct(annUndajusted4)
 
 caliper1 = sd(annUndajusted1$propensity_logit, na.rm = FALSE)*0.25
 caliper2 = sd(annUndajusted2$propensity_logit, na.rm = FALSE)*0.25
@@ -252,7 +301,7 @@ logit_lalonde <-ggarrange(balance_plot_logit1,balance_plot_logit2,
                           balance_plot_logit3,balance_plot_logit4,
                           ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 logit_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/LOGIT_balance_plots_4grid.png', plot = last_plot(),
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/LOGIT_balance_plots_nearestNeighbour.png', plot = last_plot(),
        dpi = 300)
 
 # CART 
@@ -357,7 +406,7 @@ CART_lalonde <-ggarrange(balance_plot_cart1,balance_plot_cart2,
                          balance_plot_cart3,balance_plot_cart4,
                          ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 CART_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/CART_balance_plots_4grid.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/CART_balance_plots_nearestNeighbour.png',dpi = 300, plot = last_plot())
 
 # Random Forest 
 # forest balance plots
@@ -462,7 +511,7 @@ forest_lalonde <-ggarrange(balance_plot_forest1,balance_plot_forest2,
                            balance_plot_forest3,balance_plot_forest4,
                            ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 forest_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/FOREST_balance_plots_4grid.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/FOREST_balance_plots_nearestNeighbour.png',dpi = 300, plot = last_plot())
 
 # Boosted trees 
 
@@ -568,7 +617,7 @@ boost_lalonde <-ggarrange(balance_plot_boost1,balance_plot_boost2,
                           balance_plot_boost3,balance_plot_boost4,
                           ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 boost_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/BOOST_balance_plots_4grid.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/BOOST_balance_plots_nearestNeighbour.png',dpi = 300, plot = last_plot())
 
 # ANN
 # ANN balance plots
@@ -673,7 +722,7 @@ ann_lalonde <-ggarrange(balance_plot_ann1,balance_plot_ann2,
                         balance_plot_ann3,balance_plot_ann4,
                         ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 ann_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/ann_balance_plots_4grid.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/ann_balance_plots_nearestNeighbour.png',dpi = 300, plot = last_plot())
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 #EQQ plot's
@@ -690,7 +739,7 @@ plot(m_out_ann1, type = "qq", interactive = FALSE,
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 
 cs_logit_plt1 <- bal.plot(m_out_logit1, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -702,7 +751,7 @@ cs_logit_plt1 <- bal.plot(m_out_logit1,
   ggtitle("")
 
 cs_logit_plt2 <- bal.plot(m_out_logit2, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -715,7 +764,7 @@ cs_logit_plt2 <- bal.plot(m_out_logit2,
   ggtitle("")
 
 cs_cart_plt1 <- bal.plot(m_out_cart1, 
-                         var.name = "propensity_score", 
+                         var.name = "propensity_logit", 
                          which = "both",
                          type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -727,7 +776,7 @@ cs_cart_plt1 <- bal.plot(m_out_cart1,
   ggtitle("")
 
 cs_cart_plt2 <- bal.plot(m_out_cart2, 
-                         var.name = "propensity_score", 
+                         var.name = "propensity_logit", 
                          which = "both",
                          type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -740,7 +789,7 @@ cs_cart_plt2 <- bal.plot(m_out_cart2,
   ggtitle("")
 
 cs_forest_plt1 <- bal.plot(m_out_forest1, 
-                           var.name = "propensity_score", 
+                           var.name = "propensity_logit", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
@@ -752,7 +801,7 @@ cs_forest_plt1 <- bal.plot(m_out_forest1,
   ggtitle("")
 
 cs_forest_plt2 <- bal.plot(m_out_forest2, 
-                           var.name = "propensity_score", 
+                           var.name = "propensity_logit", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
@@ -765,7 +814,7 @@ cs_forest_plt2 <- bal.plot(m_out_forest2,
 
 
 cs_boost_plt1 <- bal.plot(m_out_boost1, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram",
                           colors = c("#E31B23", "#003366"),
@@ -777,7 +826,7 @@ cs_boost_plt1 <- bal.plot(m_out_boost1,
   ggtitle("")
 
 cs_boost_plt2 <- bal.plot(m_out_boost2, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -790,7 +839,7 @@ cs_boost_plt2 <- bal.plot(m_out_boost2,
 
 
 cs_ann_plt1 <- bal.plot(m_out_ann1, 
-                        var.name = "propensity_score", 
+                        var.name = "propensity_logit", 
                         which = "both",
                         type = "histogram",
                         colors = c("#E31B23", "#003366"),
@@ -802,7 +851,7 @@ cs_ann_plt1 <- bal.plot(m_out_ann1,
   ggtitle("")
 
 cs_ann_plt2 <- bal.plot(m_out_ann2, 
-                        var.name = "propensity_score", 
+                        var.name = "propensity_logit", 
                         which = "both",
                         type = "histogram", 
                         colors = c("#E31B23", "#003366"),
@@ -825,7 +874,7 @@ ggarrange(cs_logit_plt1,cs_logit_plt2,
           font.label = list(size = 18, family = "Times New Roman"),
           legend="right")
 
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_lalonde.png',
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_lalonde_NN.png',
        dpi = 300, 
        width = 20, height = 18,
        plot = last_plot())
@@ -836,7 +885,7 @@ ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 cs_logit_plt3 <- bal.plot(m_out_logit3, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -848,7 +897,7 @@ cs_logit_plt3 <- bal.plot(m_out_logit3,
   ggtitle("")
 
 cs_logit_plt4 <- bal.plot(m_out_logit4, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -861,7 +910,7 @@ cs_logit_plt4 <- bal.plot(m_out_logit4,
   ggtitle("")
 
 cs_cart_plt3 <- bal.plot(m_out_cart3, 
-                         var.name = "propensity_score", 
+                         var.name = "propensity_logit", 
                          which = "both",
                          type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -873,7 +922,7 @@ cs_cart_plt3 <- bal.plot(m_out_cart3,
   ggtitle("")
 
 cs_cart_plt4 <- bal.plot(m_out_cart4, 
-                         var.name = "propensity_score", 
+                         var.name = "propensity_logit", 
                          which = "both",
                          type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -886,7 +935,7 @@ cs_cart_plt4 <- bal.plot(m_out_cart4,
   ggtitle("")
 
 cs_forest_plt3 <- bal.plot(m_out_forest4, 
-                           var.name = "propensity_score", 
+                           var.name = "propensity_logit", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
@@ -898,7 +947,7 @@ cs_forest_plt3 <- bal.plot(m_out_forest4,
   ggtitle("")
 
 cs_forest_plt4 <- bal.plot(m_out_forest4, 
-                           var.name = "propensity_score", 
+                           var.name = "propensity_logit", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
@@ -912,7 +961,7 @@ cs_forest_plt4 <- bal.plot(m_out_forest4,
 
 
 cs_boost_plt3 <- bal.plot(m_out_boost3, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram",
                           colors = c("#E31B23", "#003366"),
@@ -924,7 +973,7 @@ cs_boost_plt3 <- bal.plot(m_out_boost3,
   ggtitle("")
 
 cs_boost_plt4 <- bal.plot(m_out_boost4, 
-                          var.name = "propensity_score", 
+                          var.name = "propensity_logit", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -937,7 +986,7 @@ cs_boost_plt4 <- bal.plot(m_out_boost4,
   ggtitle("")
 
 cs_ann_plt3 <- bal.plot(m_out_ann3, 
-                        var.name = "propensity_score", 
+                        var.name = "propensity_logit", 
                         which = "both",
                         type = "histogram",
                         colors = c("#E31B23", "#003366"),
@@ -950,7 +999,7 @@ cs_ann_plt3 <- bal.plot(m_out_ann3,
   ggtitle("")
 
 cs_ann_plt4 <- bal.plot(m_out_ann4, 
-                        var.name = "propensity_score", 
+                        var.name = "propensity_logit", 
                         which = "both",
                         type = "histogram", 
                         colors = c("#E31B23", "#003366"),
@@ -973,7 +1022,7 @@ ggarrange(cs_logit_plt2,cs_logit_plt4,
           font.label = list(size = 18, family = "Times New Roman"),
           legend="right")
 
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_dehejiaWahba.png',
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_dehejiaWahba_NN.png',
        dpi = 300, 
        width = 20, height = 18,
        plot = last_plot())
@@ -1090,6 +1139,8 @@ imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
 # This could be improved upon to better test for common support (mean diff or statistically)
 
 
+# summarise stratification 
+#logit
 stratification_function <- function(matchit_object,strata){
   
   if(is.data.frame(matchit_object)){
@@ -1133,8 +1184,6 @@ stratifiedMatch_ann2 <- stratification_function(m_out_ann2,5)
 stratifiedMatch_ann3 <- stratification_function(m_out_ann3,5)
 stratifiedMatch_ann4 <- stratification_function(m_out_ann4,5)
 
-# summarise stratification 
-#logit
 CrossTable(stratifiedMatch_logit1$treat, stratifiedMatch_logit1$quantile)  # Treated and control counts
 CrossTable(stratifiedMatch_logit2$treat, stratifiedMatch_logit2$quantile)  # Treated and control counts
 CrossTable(stratifiedMatch_logit3$treat, stratifiedMatch_logit3$quantile)  # Treated and control counts
@@ -1333,8 +1382,6 @@ abadie_imbens_estimator(m_out_ann4,annUndajusted4)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
 # Horowitz-Thompson Weighted ATT estimator
-
-
 
 
 
