@@ -1,4 +1,4 @@
-# Estimating the effect of intervention through artificial intelligence and propensity score matching
+# Estimating intervention effect’s using propensity score matching and artificial intelligence
  
 <p> The files are structured as follows: </p>
 
