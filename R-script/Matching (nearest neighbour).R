@@ -1132,6 +1132,8 @@ imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
 
 # summarise stratification 
 #logit
+
+
 stratification_function <- function(matchit_object,strata){
   
   if(is.data.frame(matchit_object)){
@@ -1146,6 +1148,8 @@ stratification_function <- function(matchit_object,strata){
     if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support
     else{return(dataout2)}
   }}
+
+
 
 # Run function over mathched data set's
 # logit
@@ -1379,7 +1383,7 @@ weighted_regression_estimator <- function(matchit_object){
   options(survey.lonely.psu = 'adjust')
   stratified_data <- stratification_function(matchit_object,5)
   stratified_data$ID <- seq.int(nrow(stratified_data)) # create id column
-  surveyDesign1 <- svydesign(ids =~ID,strata=~quantile,weights=~weights,data = stratified_data,nest=F) # create survey design
+  surveyDesign1 <- svydesign(ids =~ID,strata=~quantile,data = stratified_data,nest=F) # create survey design
   # replicate weight's for bootstrapped standard errors
   surveyDesign1.bootstrap <- as.svrepdesign(surveyDesign1,type=c("bootstrap"),replicates=100)
   

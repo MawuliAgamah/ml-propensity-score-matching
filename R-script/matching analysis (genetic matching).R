@@ -751,7 +751,7 @@ cs_logit_plt2 <- bal.plot(m_out_logit2,
   xlab("Matched PSID control unit's")+
   ylab("")+
   ggtitle("")
-
+cs_logit_plt1
 cs_cart_plt1 <- bal.plot(m_out_cart1, 
                               var.name = "propensity_logit", 
                               which = "both",
@@ -776,7 +776,7 @@ cs_cart_plt2 <- bal.plot(m_out_cart2,
   xlab("Matched PSID control unit's")+
   ylab("")+
   ggtitle("")
-
+cs_cart_plt2
 cs_forest_plt1 <- bal.plot(m_out_forest1, 
                          var.name = "propensity_logit", 
                          which = "both",
@@ -788,7 +788,7 @@ cs_forest_plt1 <- bal.plot(m_out_forest1,
         text = element_text(family = "Times New Roman",size = 18))+
   xlab("Matched PSID control unit's")+
   ggtitle("")
-
+cs_forest_plt1
 cs_forest_plt2 <- bal.plot(m_out_forest2, 
                            var.name = "propensity_logit", 
                            which = "both",
@@ -801,7 +801,7 @@ cs_forest_plt2 <- bal.plot(m_out_forest2,
   xlab("Matched PSID control unit's")+
   ggtitle("")
 
-
+cs_forest_plt2
 cs_boost_plt1 <- bal.plot(m_out_boost1, 
                            var.name = "propensity_logit", 
                            which = "both",
@@ -813,7 +813,7 @@ cs_boost_plt1 <- bal.plot(m_out_boost1,
         text = element_text(family = "Times New Roman",size = 18))+
   xlab("Matched CPS control unit's")+
   ggtitle("")
-
+cs_boost_plt1
 cs_boost_plt2 <- bal.plot(m_out_boost2, 
                           var.name = "propensity_logit", 
                           which = "both",
@@ -826,7 +826,7 @@ cs_boost_plt2 <- bal.plot(m_out_boost2,
   xlab("Matched psid control unit's")+
   ggtitle("")
 
-
+cs_boost_plt2
 cs_ann_plt1 <- bal.plot(m_out_ann1, 
                           var.name = "propensity_logit", 
                           which = "both",
@@ -838,7 +838,7 @@ cs_ann_plt1 <- bal.plot(m_out_ann1,
         text = element_text(family = "Times New Roman",size = 18))+
   xlab("Matched CPS control unit's")+
   ggtitle("")
-
+cs_ann_plt1
 cs_ann_plt2 <- bal.plot(m_out_ann2, 
                           var.name = "propensity_logit", 
                           which = "both",
@@ -851,7 +851,7 @@ cs_ann_plt2 <- bal.plot(m_out_ann2,
   xlab("Matched psid control unit's")+
   ylab("")+
   ggtitle("")
-
+cs_ann_plt2
 ggarrange(cs_logit_plt1,cs_logit_plt2,
           cs_cart_plt1,cs_cart_plt2,
           cs_forest_plt1,cs_forest_plt2,
@@ -1136,40 +1136,21 @@ imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
 stratification_function <- function(matchit_object,strata){
   
   if(is.data.frame(matchit_object)){
-    dataout1 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+    dataout1 <- matchit_object %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
     x <- CrossTable(dataout1$treat, dataout1$quantile) # summary of strata
-    if (0 %in% x$t){return(stratification_function(dataout1,strata-1))} # check common support , if not met call function again
+    if (0 %in% x$t){return(stratification_function(dataout1,strata-1))}
     else{return(dataout1)}
   }else{
     datain <- match.data(matchit_object) # match it object to data frame 
     dataout2 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
     x2 <- CrossTable(dataout2$treat, dataout2$quantile) # summary of strata
-    if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support,if not met call function again
+    if (0 %in% x2$t){return(stratification_function(dataout2,strata-1))}# check common support
     else{return(dataout2)}
   }}
 
 
-#stratification_function <- function(matchit_object,strata){
-  
 
-#    datain <- match.data(matchit_object) # matchit object to dataframe 
-#    x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
-#    dataout <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
-    
-#      if (0 %in% x$t){ # check common support
-#          datain <- match.data(matchit_object) # matchit object to dataframe 
-#          dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-1)) # stratify
-#          x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
-#             if (0 %in% x$t){ # check common support
-#               datain <- match.data(matchit_object) # matchit object to dataframe 
-#               dataout = datain %>% mutate(quantile = ntile(propensity_score, strata-2)) # stratify
-#               x <- CrossTable(dataout$treat, dataout$quantile) # summary of strata
-#               return(dataout)
-#            }else{
-#              return(dataout)
-#            }
-#          }
-#}
+
 
 # Run function over mathched data set's
 # logit
@@ -1359,7 +1340,7 @@ regression_controls(m_out_ann4,specification_3)
 # Addide and Imebns methods 
 
 
-abadie_imbens_estimator_with_bootstrapSE <- function(object,dataset){
+abadie_imbens_estimator <- function(object,dataset){
   
   x <- att(obj = object, Y = dataset$re78)
   y <- bootstrap.se(object, Y = dataset$re78, max.iter = 1000)
@@ -1423,15 +1404,10 @@ weighted_regression_estimator <- function(matchit_object){
   options(survey.lonely.psu = 'adjust')
   stratified_data <- stratification_function(matchit_object,5)
   stratified_data$ID <- seq.int(nrow(stratified_data)) # create id column
-  surveyDesign1 <- svydesign(ids =~ID,strata=~quantile,weights=~weights,data = stratified_data,nest=F) # create survey design
+  surveyDesign1 <- svydesign(ids =~ID,strata=~quantile,data = stratified_data,nest=F) # create survey design
   # replicate weight's for bootstrapped standard errors
   surveyDesign1.bootstrap <- as.svrepdesign(surveyDesign1,type=c("bootstrap"),replicates=100)
- 
-  # weighted means estimator 
-  #weightedmeans <- svyby(formula=~re78,by=~treat,design=surveyDesign1, FUN=svymean,covmat=TRUE)
-  #ATT_weighted_means <- svycontrast(weightedMeans, contrasts=c(-1,1))  # mean of treated-mean control 
-  #ATT_weighted_means
-  #re-estimate the ATT with regression, but this time obtain standard errors with bootstrapping
+
   outcomeModel2006Boot <- svyglm(re78~treat,surveyDesign1.bootstrap)
   summary(outcomeModel2006Boot)
   
@@ -1464,5 +1440,16 @@ weighted_regression_estimator(m_out_ann1)
 weighted_regression_estimator(m_out_ann2)
 weighted_regression_estimator(m_out_ann3)
 weighted_regression_estimator(m_out_ann4)
+
+x <- match.data(m_out_forest1)
+treated <- x[x$treat==1,]
+control <- x[x$treat==0,]
+
+mean(treated$re78) - mean(control$re78)
+summary(control)
+summary(treated)
+
+
+by(x, x$treat, summary)
 
 
