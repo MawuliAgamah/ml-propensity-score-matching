@@ -1137,7 +1137,7 @@ imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
 stratification_function <- function(matchit_object,strata){
   
   if(is.data.frame(matchit_object)){
-    dataout1 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+    dataout1 <- matchit_object %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
     x <- CrossTable(dataout1$treat, dataout1$quantile) # summary of strata
     if (0 %in% x$t){return(stratification_function(dataout1,strata-1))}
     else{return(dataout1)}
@@ -1145,7 +1145,7 @@ stratification_function <- function(matchit_object,strata){
     datain <- match.data(matchit_object) # match it object to data frame 
     dataout2 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
     x2 <- CrossTable(dataout2$treat, dataout2$quantile) # summary of strata
-    if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support
+    if (0 %in% x2$t){return(stratification_function(dataout2,strata-1))}# check common support
     else{return(dataout2)}
   }}
 
@@ -1243,10 +1243,10 @@ benchmark.experimental.data$agesq = benchmark.experimental.data$age*benchmark.ex
 
 
 # Benchmark for matching with match It package , nearest neighbor matching and logit propensity scores 
-nn_logit_matching_benchmark <- matchit(treat~age + agesq + education. + educsq +  black + 
-                                         hispanic + married + nodegree +
-                                         re75 + re75 + u74+ u75, data =  unmatched.data.cps.lalonde,
-                                       caliper = 0.05, method = "nearest",distance = "logit")
+#nn_logit_matching_benchmark <- matchit(treat~age + agesq + education. + educsq +  black + 
+#                                         hispanic + married + nodegree +
+#                                         re75 + re75 + u74+ u75, data =  unmatched.data.cps.lalonde,
+#                                       caliper = 0.05, method = "nearest",distance = "logit")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1337,7 +1337,7 @@ regression_controls(m_out_ann4,specification_3)
 # Addide and Imebns methods 
 
 
-abadie_imbens_estimator_with_bootstrapSE <- function(object,dataset){
+abadie_imbens_estimator <- function(object,dataset){
   
   x <- att(obj = object, Y = dataset$re78)
   y <- bootstrap.se(object, Y = dataset$re78, max.iter = 1000)
