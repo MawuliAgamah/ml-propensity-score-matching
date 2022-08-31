@@ -18,7 +18,15 @@ library('MatchItSE')
 library('survey')
 library('Matching')
 library('rgenoud')
+library("pcalg")
+library("pcalg")
+#install.packages("/Users/mawuliagamah/gitprojects/causal_inference/r packages/pcalg", repos = NULL, type="source",dependencies=TRUE)
 
+
+remove.packages("pcalg", lib = "/Users/mawuliagamah/gitprojects/causal_inference/r packages/pcalg")
+#install.packages("/Users/mawuliagamah/gitprojects/causal_inference/r packages/graph",repos=NULL, type="source")
+#install.packages("/Users/mawuliagamah/gitprojects/causal_inference/r packages/BiocGenerics",repos=NULL, type="source")
+#install.packages("/Users/mawuliagamah/gitprojects/causal_inference/r packages/RBGL",repos=NULL, type="source")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # global set up and information 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
@@ -32,8 +40,31 @@ set.seed(1234)
 # 4 - nsw treated + psid control (dehejia & wahba sub-sample)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
- # 
+ # Load the dataset's we need 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
+# make it work for one dataset and then roll everything into an objet/function
+
+#class(s) <- "DAG"
+
+# Key variables needed for DAGs
+# 1 = individual/unit 
+# 2 = outcome variable = wage in 1978 
+# 3 = intervention/treatment variable  = treat column
+
+
+
+
+baseline_dataset_1 <- read.csv("/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/nsw_featureTransformed.csv")
+covariates <- colnames(baseline_dataset_1)
+covariates[1]
+
+dagified <- dagify(x ~ z,
+                   y ~ z,
+                   exposure = "x",
+                   outcome = "y")
+tidy_dagitty(dagified)
+
+
 
 
 
