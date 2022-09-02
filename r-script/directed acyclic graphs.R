@@ -20,7 +20,14 @@ library('Matching')
 library('rgenoud')
 library("pcalg")
 library("pcalg")
-#install.packages("/Users/mawuliagamah/gitprojects/causal_inference/r packages/pcalg", repos = NULL, type="source",dependencies=TRUE)
+
+install.packages("MASS")
+install.packages("momentchi2")
+library(devtools)
+
+install_github("Diviyan-Kalainathan/RCIT")
+install.packages("pcalg")
+library(RCIT)
 
 
 remove.packages("pcalg", lib = "/Users/mawuliagamah/gitprojects/causal_inference/r packages/pcalg")
