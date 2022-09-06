@@ -40,6 +40,8 @@ trimming.funct <- function(dataset){
   return(trimmed_df)
   
 }
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 
 forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + propensity_score
@@ -54,10 +56,12 @@ logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/cau
 logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT.csv')
 logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT.csv')
 
+
 logitUndajusted1 <- trimming.funct(logitUndajusted1)
 logitUndajusted2 <- trimming.funct(logitUndajusted2)
 logitUndajusted3 <- trimming.funct(logitUndajusted3)
 logitUndajusted4 <- trimming.funct(logitUndajusted4)
+
 
 caliper1 = sd(logitUndajusted1$propensity_score, na.rm = FALSE)*0.25
 caliper2 = sd(logitUndajusted2$propensity_score, na.rm = FALSE)*0.25
@@ -78,29 +82,6 @@ m_out_logit_gen2 <- matchit(formula = forumla1, data = logitUndajusted2, method 
 m_out_logit_gen3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
 m_out_logit_gen4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE,pop.size = 50)# 
 
-# Get non-featured selected data
-logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT_FS1.csv')
-logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswPsid_lalonde_ps_unmatched_LOGIT_FS1.csv')
-logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT_FS1.csv')
-logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT_FS1.csv')
-
-logitUndajusted1 <- trimming.funct(logitUndajusted1)
-logitUndajusted2 <- trimming.funct(logitUndajusted2)
-logitUndajusted3 <- trimming.funct(logitUndajusted3)
-logitUndajusted4 <- trimming.funct(logitUndajusted4)
-
-# nearest neighbor(feature selected)
-
-m_out_logit_fs_nn1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "nearest",ratio=1,distance = logitUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_logit_fs_nn2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "nearest",ratio=1, distance = logitUndajusted2$propensity_score,caliper = caliper2, replace =  TRUE)
-m_out_logit_fs_nn3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "nearest",ratio=1, distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_logit_fs_nn4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "nearest",ratio=1, distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE)
-
-# genetic matching (feature selected)
-m_out_logit_fs_gen1 <- matchit(formula = forumla1, data = logitUndajusted1,method = "genetic",distance = logitUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
-m_out_logit_fs_gen2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_score,caliper = caliper2, replace =  TRUE,pop.size = 50)
-m_out_logit_fs_gen3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_logit_fs_gen4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE,pop.size = 50)
 
 
 
@@ -126,10 +107,10 @@ caliper4 = sd(cartUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
 # nearest neighbor 
 
-m_out_cart_nn1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "nearest",ratio=1,distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_cart_nn2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "nearest",ratio=1, distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_cart_nn3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "nearest",ratio=1, distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_cart_nn4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "nearest",ratio=1, distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_cart_nn1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "nearest",ratio=5,distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_cart_nn2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "nearest",ratio=5, distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_cart_nn3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "nearest",ratio=5, distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_cart_nn4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "nearest",ratio=5, distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 
 # genetic matching
 
@@ -157,11 +138,10 @@ caliper4 = sd(cartUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
 # nearest neighbor(feature selected)
 
-m_out_cart_fs_nn1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "genetic",distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
-m_out_cart_fs_nn1 <- matchit(formula = forumla1, data = cartUndajusted2, method = "genetic", distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
-m_out_cart_fs_nn1 <- matchit(formula = forumla2, data = cartUndajusted3, method = "genetic", distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_cart_fs_nn1 <- matchit(formula = forumla2, data = cartUndajusted4, method = "genetic", distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
-
+m_out_cart_fs_nn1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "nearest",ratio=5,distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_cart_fs_nn2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "nearest",ratio=5, distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_cart_fs_nn3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "nearest",ratio=5, distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_cart_fs_nn4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "nearest",ratio=5, distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 # genetic matching (feature selected)
 
 m_out_cart_fs_gen1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "genetic",distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
@@ -193,10 +173,10 @@ caliper4 = sd(forestUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
 # nearest neighbor 
 
-m_out_forest_nn1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "nearest",ratio=1,distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_forest_nn2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "nearest",ratio=1, distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE)
-m_out_forest_nn3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "nearest",ratio=1, distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_forest_nn4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "nearest",ratio=1, distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_forest_nn1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "nearest",ratio=5,distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_forest_nn2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "nearest",ratio=5, distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE)
+m_out_forest_nn3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "nearest",ratio=5, distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_forest_nn4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "nearest",ratio=5, distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 
 # genetic matching 
 m_out_forest_gen1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic",distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
@@ -223,18 +203,18 @@ caliper4 = sd(forestUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
 #nearest neighbor   
 
-m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "nearest",ratio=5,distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "nearest",ratio=5, distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE)
-m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "nearest",ratio=5, distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "nearest",ratio=5, distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_forest_fs_nn1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "nearest",ratio=5,distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_forest_fs_nn2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "nearest",ratio=5, distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE)
+m_out_forest_fs_nn3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "nearest",ratio=5, distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_forest_fs_nn4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "nearest",ratio=5, distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 
 
 #Genetic matching 
 
-m_out_forest_gen1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic",distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
-m_out_forest_gen2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "genetic", distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE,pop.size = 50)
-m_out_forest_gen3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "genetic", distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_forest_gen4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "genetic", distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
+m_out_forest_fs_gen1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic",distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_forest_fs_gen2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "genetic", distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE,pop.size = 50)
+m_out_forest_fs_gen3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "genetic", distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_forest_fs_gen4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "genetic", distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
@@ -255,10 +235,10 @@ caliper2 = sd(boostUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(boostUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(boostUndajusted4$propensity_score, na.rm = FALSE)*0.25
 #nearest neighbor matching
-m_out_boost_nn1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "nearest",ratio=1, distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE)
-m_out_boost_nn2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "nearest",ratio=1, distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_boost_nn3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "nearest",ratio=1, distance = boostUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_boost_nn4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "nearest",ratio=1, distance = boostUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_boost_nn1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "nearest",ratio=5, distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE)
+m_out_boost_nn2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "nearest",ratio=5, distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_boost_nn3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "nearest",ratio=5, distance = boostUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_boost_nn4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "nearest",ratio=5, distance = boostUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 #genetic matching 
 m_out_boost_gen1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "genetic", distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE,pop.size = 50)
 m_out_boost_gen2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "genetic", distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
@@ -313,24 +293,57 @@ caliper2 = sd(annUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(annUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(annUndajusted4$propensity_score, na.rm = FALSE)*0.25
 #nearest neighbor
-m_out_ann_nn1 <- matchit(formula = forumla1, data = annUndajusted1, method = "nearest",ratio=1, distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_ann_nn2 <- matchit(formula = forumla1, data = annUndajusted2, method = "nearest",ratio=1, distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_ann_nn3 <- matchit(formula = forumla2, data = annUndajusted3, method = "nearest",ratio=1, distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_ann_nn4 <- matchit(formula = forumla2, data = annUndajusted4, method = "nearest",ratio=1, distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_ann_nn1 <- matchit(formula = forumla1, data = annUndajusted1, method = "nearest",ratio=5, distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_ann_nn2 <- matchit(formula = forumla1, data = annUndajusted2, method = "nearest",ratio=5, distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_ann_nn3 <- matchit(formula = forumla2, data = annUndajusted3, method = "nearest",ratio=5, distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_ann_nn4 <- matchit(formula = forumla2, data = annUndajusted4, method = "nearest",ratio=5, distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 #genetic matching 
 m_out_ann_gen1 <- matchit(formula = forumla1, data = annUndajusted1, method = "genetic", distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
 m_out_ann_gen2 <- matchit(formula = forumla1, data = annUndajusted2, method = "genetic", distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
 m_out_ann_gen3 <- matchit(formula = forumla2, data = annUndajusted3, method = "genetic", distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
 m_out_ann_gen4 <- matchit(formula = forumla2, data = annUndajusted4, method = "genetic", distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
+# FS
+
+annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswCps_lalonde_ps_unmatched_ANN_FS1.csv')
+annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN_FS1.csv')
+annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN_FS1.csv')
+annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datas/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN_FS1.csv')
+
+annUndajusted1 <- trimming.funct(annUndajusted1)
+annUndajusted2 <- trimming.funct(annUndajusted2)
+annUndajusted3 <- trimming.funct(annUndajusted3)
+annUndajusted4 <- trimming.funct(annUndajusted4)
+
+caliper1 = sd(annUndajusted1$propensity_score, na.rm = FALSE)*0.25
+caliper2 = sd(annUndajusted2$propensity_score, na.rm = FALSE)*0.25
+caliper3 = sd(annUndajusted3$propensity_score, na.rm = FALSE)*0.25
+caliper4 = sd(annUndajusted4$propensity_score, na.rm = FALSE)*0.25
+
+#genetic
+m_out_ann_fs_nn1 <- matchit(formula = forumla1, data = annUndajusted1, method = "nearest",ratio=5, distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_ann_fs_nn2 <- matchit(formula = forumla1, data = annUndajusted2, method = "nearest",ratio=5, distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_ann_fs_nn3 <- matchit(formula = forumla2, data = annUndajusted3, method = "nearest",ratio=5, distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_ann_fs_nn4 <- matchit(formula = forumla2, data = annUndajusted4, method = "nearest",ratio=5, distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+
+#nearest neighbor
+m_out_ann_fs_gen1 <- matchit(formula = forumla1, data = annUndajusted1, method = "genetic", distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_ann_fs_gen2 <- matchit(formula = forumla1, data = annUndajusted2, method = "genetic", distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_ann_fs_gen3 <- matchit(formula = forumla2, data = annUndajusted3, method = "genetic", distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_ann_fs_gen4 <- matchit(formula = forumla2, data = annUndajusted4, method = "genetic", distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
+
+
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # Covariate balance plots 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 
+
 # LOGIT - balance plots
 balance_plot_logit1 <- love.plot(forumla1,data = logitUndajusted1,
-                                 weights = list(genMatch = m_out_logit_nn1,
-                                                nearest = m_out_logit_gen1),
+                                 weights = list(genMatch = m_out_logit_gen1,nearest = m_out_logit_nn1),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -340,8 +353,8 @@ balance_plot_logit1 <- love.plot(forumla1,data = logitUndajusted1,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour"))+
   xlab("Lalonde with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -356,8 +369,8 @@ balance_plot_logit1 <- love.plot(forumla1,data = logitUndajusted1,
 balance_plot_logit1
 
 balance_plot_logit2 <- love.plot(forumla1,data = logitUndajusted2,
-                                 weights = list(genMatch = m_out_logit_nn2,
-                                                nearest = m_out_logit_gen2),
+                                 weights = list(genMatch = m_out_logit_gen2,nearest = m_out_logit_nn2,
+                                                genMatchFS = m_out_logit_fs_gen2 , nearestFS = m_out_logit_fs_nn2),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -367,8 +380,8 @@ balance_plot_logit2 <- love.plot(forumla1,data = logitUndajusted2,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde's with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -383,8 +396,8 @@ balance_plot_logit2 <- love.plot(forumla1,data = logitUndajusted2,
 balance_plot_logit2
 
 balance_plot_logit3 <- love.plot(forumla2,data = logitUndajusted3,
-                                 weights = list(genMatch = m_out_logit_nn3,
-                                                nearest = m_out_logit_gen3),
+                                 weights = list(genMatch = m_out_logit_gen3,nearest = m_out_logit_nn3,
+                                                genMatchFS = m_out_logit_fs_gen3 , nearestFS = m_out_logit_fs_nn3),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -394,8 +407,8 @@ balance_plot_logit3 <- love.plot(forumla2,data = logitUndajusted3,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -412,8 +425,8 @@ balance_plot_logit3
 
 
 balance_plot_logit4 <- love.plot(forumla2,data = logitUndajusted4,
-                                   weights = list(genMatch = m_out_logit_nn4,
-                                                  nearest = m_out_logit_gen4),
+                                 weights = list(genMatch = m_out_logit_gen4,nearest = m_out_logit_nn4,
+                                                genMatchFS = m_out_logit_fs_gen4 , nearestFS = m_out_logit_fs_nn4),
                                    stat = c("mean.diffs"),
                                    drop.distance = TRUE, 
                                    var.order = "unadjusted",
@@ -423,8 +436,8 @@ balance_plot_logit4 <- love.plot(forumla2,data = logitUndajusted4,
                                    size = 3.5,
                                    shapes = c("circle filled", "circle filled","circle filled"),
                                    thresholds = c(m = .2),
-                                   colors = c("#003366","#E31B23","#006627"),
-                                   sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                   colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                   sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
     xlab("D-W with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -443,13 +456,13 @@ logit_lalonde <-ggarrange(balance_plot_logit1,balance_plot_logit2,
                           balance_plot_logit3,balance_plot_logit4,
                           ncol = 4,nrow = 1, common.legend = TRUE, legend="right")
 logit_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/LOGIT.png', plot = last_plot(),
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/logit_all_methods.png', plot = last_plot(),
       width = 22, height = 8 , device = "png", dpi=700)
 
 # CART- balance plots
 balance_plot_cart1 <- love.plot(forumla1,data = cartUndajusted1,
-                                 weights = list(genMatch = m_out_cart_nn1,
-                                                nearest = m_out_cart_gen1),
+                                weights = list(genMatch = m_out_cart_gen1,nearest = m_out_cart_nn1,
+                                               genMatchFS = m_out_cart_fs_gen1 , nearestFS = m_out_cart_fs_nn1),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -457,10 +470,10 @@ balance_plot_cart1 <- love.plot(forumla1,data = cartUndajusted1,
                                  line =TRUE, 
                                  stars = "raw",
                                  size = 3.5,
-                                 shapes = c("circle filled", "circle filled","circle filled"),
+                                 shapes = c("circle filled", "circle filled","circle filled","circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -475,8 +488,8 @@ balance_plot_cart1 <- love.plot(forumla1,data = cartUndajusted1,
 balance_plot_cart1
 
 balance_plot_cart2 <- love.plot(forumla1,data = cartUndajusted2,
-                                 weights = list(genMatch = m_out_cart_nn2,
-                                                nearest = m_out_cart_gen2),
+                                weights = list(genMatch = m_out_cart_gen2,nearest = m_out_cart_nn2,
+                                               genMatchFS = m_out_cart_fs_gen2 , nearestFS = m_out_cart_fs_nn2),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -486,8 +499,8 @@ balance_plot_cart2 <- love.plot(forumla1,data = cartUndajusted2,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde's with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -502,8 +515,8 @@ balance_plot_cart2 <- love.plot(forumla1,data = cartUndajusted2,
 balance_plot_cart2
 
 balance_plot_cart3 <- love.plot(forumla2,data = cartUndajusted3,
-                                 weights = list(genMatch = m_out_cart_nn3,
-                                                nearest = m_out_cart_gen3),
+                                weights = list(genMatch = m_out_cart_gen3,nearest = m_out_cart_nn3,
+                                               genMatchFS = m_out_cart_fs_gen3 , nearestFS = m_out_cart_fs_nn3),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -513,8 +526,8 @@ balance_plot_cart3 <- love.plot(forumla2,data = cartUndajusted3,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -531,8 +544,8 @@ balance_plot_cart3
 
 
 balance_plot_cart4 <- love.plot(forumla2,data = cartUndajusted4,
-                                 weights = list(genMatch = m_out_cart_nn4,
-                                                nearest = m_out_cart_gen4),
+                                weights = list(genMatch = m_out_cart_gen4,nearest = m_out_cart_nn4,
+                                               genMatchFS = m_out_cart_fs_gen4 , nearestFS = m_out_cart_fs_nn4),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -542,8 +555,8 @@ balance_plot_cart4 <- love.plot(forumla2,data = cartUndajusted4,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -562,13 +575,13 @@ cart_lalonde <-ggarrange(balance_plot_cart1,balance_plot_cart2,
                           balance_plot_cart3,balance_plot_cart4,
                           ncol = 4,nrow = 1, common.legend = TRUE, legend="right")
 cart_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/cart.png', plot = last_plot(),
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/cart_all_methods.png', plot = last_plot(),
        width = 22, height = 8 , device = "png", dpi=700)
 
 # boost- balance plots
 balance_plot_boost1 <- love.plot(forumla1,data = boostUndajusted1,
-                                weights = list(genMatch = m_out_boost_nn1,
-                                               nearest = m_out_boost_gen1),
+                                 weights = list(genMatch = m_out_boost_gen1,nearest = m_out_boost_nn1,
+                                                genMatchFS = m_out_boost_fs_gen1, nearestFS = m_out_boost_fs_nn1),
                                 stat = c("mean.diffs"),
                                 drop.distance = TRUE, 
                                 var.order = "unadjusted",
@@ -578,8 +591,8 @@ balance_plot_boost1 <- love.plot(forumla1,data = boostUndajusted1,
                                 size = 3.5,
                                 shapes = c("circle filled", "circle filled","circle filled"),
                                 thresholds = c(m = .2),
-                                colors = c("#003366","#E31B23","#006627"),
-                                sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -594,8 +607,8 @@ balance_plot_boost1 <- love.plot(forumla1,data = boostUndajusted1,
 balance_plot_boost1
 
 balance_plot_boost2 <- love.plot(forumla1,data = boostUndajusted2,
-                                weights = list(genMatch = m_out_boost_nn2,
-                                               nearest = m_out_boost_gen2),
+                                 weights = list(genMatch = m_out_boost_gen2,nearest = m_out_boost_nn2,
+                                                genMatchFS = m_out_boost_fs_gen2, nearestFS = m_out_boost_fs_nn2),
                                 stat = c("mean.diffs"),
                                 drop.distance = TRUE, 
                                 var.order = "unadjusted",
@@ -605,8 +618,8 @@ balance_plot_boost2 <- love.plot(forumla1,data = boostUndajusted2,
                                 size = 3.5,
                                 shapes = c("circle filled", "circle filled","circle filled"),
                                 thresholds = c(m = .2),
-                                colors = c("#003366","#E31B23","#006627"),
-                                sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde's with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -621,8 +634,8 @@ balance_plot_boost2 <- love.plot(forumla1,data = boostUndajusted2,
 balance_plot_boost2
 
 balance_plot_boost3 <- love.plot(forumla2,data = boostUndajusted3,
-                                weights = list(genMatch = m_out_boost_nn3,
-                                               nearest = m_out_boost_gen3),
+                                 weights = list(genMatch = m_out_boost_gen3,nearest = m_out_boost_nn3,
+                                                genMatchFS = m_out_boost_fs_gen3, nearestFS = m_out_boost_fs_nn3),
                                 stat = c("mean.diffs"),
                                 drop.distance = TRUE, 
                                 var.order = "unadjusted",
@@ -632,8 +645,8 @@ balance_plot_boost3 <- love.plot(forumla2,data = boostUndajusted3,
                                 size = 3.5,
                                 shapes = c("circle filled", "circle filled","circle filled"),
                                 thresholds = c(m = .2),
-                                colors = c("#003366","#E31B23","#006627"),
-                                sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -650,8 +663,8 @@ balance_plot_boost3
 
 
 balance_plot_boost4 <- love.plot(forumla2,data = boostUndajusted4,
-                                weights = list(genMatch = m_out_boost_nn4,
-                                               nearest = m_out_boost_gen4),
+                                 weights = list(genMatch = m_out_boost_gen4,nearest = m_out_boost_nn4,
+                                                genMatchFS = m_out_boost_fs_gen4, nearestFS = m_out_boost_fs_nn4),
                                 stat = c("mean.diffs"),
                                 drop.distance = TRUE, 
                                 var.order = "unadjusted",
@@ -661,8 +674,8 @@ balance_plot_boost4 <- love.plot(forumla2,data = boostUndajusted4,
                                 size = 3.5,
                                 shapes = c("circle filled", "circle filled","circle filled"),
                                 thresholds = c(m = .2),
-                                colors = c("#003366","#E31B23","#006627"),
-                                sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -681,13 +694,13 @@ boost_lalonde <-ggarrange(balance_plot_boost1,balance_plot_boost2,
                          balance_plot_boost3,balance_plot_boost4,
                          ncol = 4,nrow = 1, common.legend = TRUE, legend="right")
 boost_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/boost.png', plot = last_plot(),
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/boost_all_method.png', plot = last_plot(),
        width = 22, height = 8 , device = "png", dpi=700)
 
 # forest- balance plots
 balance_plot_forest1 <- love.plot(forumla1,data = forestUndajusted1,
-                                 weights = list(genMatch = m_out_forest_nn1,
-                                                nearest = m_out_forest_gen1),
+                                  weights = list(genMatch = m_out_forest_gen1,nearest = m_out_forest_nn1,
+                                                 genMatchFS = m_out_forest_fs_gen1, nearestFS = m_out_forest_fs_nn1),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -697,8 +710,8 @@ balance_plot_forest1 <- love.plot(forumla1,data = forestUndajusted1,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -713,8 +726,8 @@ balance_plot_forest1 <- love.plot(forumla1,data = forestUndajusted1,
 balance_plot_forest1
 
 balance_plot_forest2 <- love.plot(forumla1,data = forestUndajusted2,
-                                 weights = list(genMatch = m_out_forest_nn2,
-                                                nearest = m_out_forest_gen2),
+                                  weights = list(genMatch = m_out_forest_gen2,nearest = m_out_forest_nn2,
+                                                 genMatchFS = m_out_forest_fs_gen2, nearestFS = m_out_forest_fs_nn2),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -724,8 +737,8 @@ balance_plot_forest2 <- love.plot(forumla1,data = forestUndajusted2,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde's with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -740,8 +753,8 @@ balance_plot_forest2 <- love.plot(forumla1,data = forestUndajusted2,
 balance_plot_forest2
 
 balance_plot_forest3 <- love.plot(forumla2,data = forestUndajusted3,
-                                 weights = list(genMatch = m_out_forest_nn3,
-                                                nearest = m_out_forest_gen3),
+                                  weights = list(genMatch = m_out_forest_gen3,nearest = m_out_forest_nn3,
+                                                 genMatchFS = m_out_forest_fs_gen3, nearestFS = m_out_forest_fs_nn3),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -751,8 +764,8 @@ balance_plot_forest3 <- love.plot(forumla2,data = forestUndajusted3,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -769,8 +782,8 @@ balance_plot_forest3
 
 
 balance_plot_forest4 <- love.plot(forumla2,data = forestUndajusted4,
-                                 weights = list(genMatch = m_out_forest_nn4,
-                                                nearest = m_out_forest_gen4),
+                                  weights = list(genMatch = m_out_forest_gen4,nearest = m_out_forest_nn4,
+                                                 genMatchFS = m_out_forest_fs_gen4, nearestFS = m_out_forest_fs_nn4),
                                  stat = c("mean.diffs"),
                                  drop.distance = TRUE, 
                                  var.order = "unadjusted",
@@ -780,8 +793,8 @@ balance_plot_forest4 <- love.plot(forumla2,data = forestUndajusted4,
                                  size = 3.5,
                                  shapes = c("circle filled", "circle filled","circle filled"),
                                  thresholds = c(m = .2),
-                                 colors = c("#003366","#E31B23","#006627"),
-                                 sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                 colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                 sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -800,13 +813,13 @@ forest_lalonde <-ggarrange(balance_plot_forest1,balance_plot_forest2,
                           balance_plot_forest3,balance_plot_forest4,
                           ncol = 4,nrow = 1, common.legend = TRUE, legend="right")
 forest_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/forest.png', plot = last_plot(),
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/forest_all_method.png', plot = last_plot(),
        width = 22, height = 8 , device = "png", dpi=700)
 
 # ann- balance plots
 balance_plot_ann1 <- love.plot(forumla1,data = annUndajusted1,
-                                  weights = list(genMatch = m_out_ann_nn1,
-                                                 nearest = m_out_ann_gen1),
+                               weights = list(genMatch = m_out_ann_gen1,nearest = m_out_ann_nn1,
+                                              genMatchFS = m_out_ann_fs_gen1, nearestFS = m_out_ann_fs_nn1),
                                   stat = c("mean.diffs"),
                                   drop.distance = TRUE, 
                                   var.order = "unadjusted",
@@ -816,8 +829,8 @@ balance_plot_ann1 <- love.plot(forumla1,data = annUndajusted1,
                                   size = 3.5,
                                   shapes = c("circle filled", "circle filled","circle filled"),
                                   thresholds = c(m = .2),
-                                  colors = c("#003366","#E31B23","#006627"),
-                                  sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                  colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                  sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -832,8 +845,8 @@ balance_plot_ann1 <- love.plot(forumla1,data = annUndajusted1,
 balance_plot_ann1
 
 balance_plot_ann2 <- love.plot(forumla1,data = annUndajusted2,
-                                  weights = list(genMatch = m_out_ann_nn2,
-                                                 nearest = m_out_ann_gen2),
+                               weights = list(genMatch = m_out_ann_gen2,nearest = m_out_ann_nn2,
+                                              genMatchFS = m_out_ann_fs_gen2, nearestFS = m_out_ann_fs_nn2),
                                   stat = c("mean.diffs"),
                                   drop.distance = TRUE, 
                                   var.order = "unadjusted",
@@ -843,8 +856,8 @@ balance_plot_ann2 <- love.plot(forumla1,data = annUndajusted2,
                                   size = 3.5,
                                   shapes = c("circle filled", "circle filled","circle filled"),
                                   thresholds = c(m = .2),
-                                  colors = c("#003366","#E31B23","#006627"),
-                                  sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                  colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                  sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("Lalonde's with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -859,8 +872,8 @@ balance_plot_ann2 <- love.plot(forumla1,data = annUndajusted2,
 balance_plot_ann2
 
 balance_plot_ann3 <- love.plot(forumla2,data = annUndajusted3,
-                                  weights = list(genMatch = m_out_ann_nn3,
-                                                 nearest = m_out_ann_gen3),
+                               weights = list(genMatch = m_out_ann_gen3,nearest = m_out_ann_nn3,
+                                              genMatchFS = m_out_ann_fs_gen3, nearestFS = m_out_ann_fs_nn3),
                                   stat = c("mean.diffs"),
                                   drop.distance = TRUE, 
                                   var.order = "unadjusted",
@@ -870,8 +883,8 @@ balance_plot_ann3 <- love.plot(forumla2,data = annUndajusted3,
                                   size = 3.5,
                                   shapes = c("circle filled", "circle filled","circle filled"),
                                   thresholds = c(m = .2),
-                                  colors = c("#003366","#E31B23","#006627"),
-                                  sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                  colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                  sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with CPS controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -888,8 +901,8 @@ balance_plot_ann3
 
 
 balance_plot_ann4 <- love.plot(forumla2,data = annUndajusted4,
-                                  weights = list(genMatch = m_out_ann_nn4,
-                                                 nearest = m_out_ann_gen4),
+                               weights = list(genMatch = m_out_ann_gen4,nearest = m_out_ann_nn4,
+                                              genMatchFS = m_out_ann_fs_gen4, nearestFS = m_out_ann_fs_nn4),
                                   stat = c("mean.diffs"),
                                   drop.distance = TRUE, 
                                   var.order = "unadjusted",
@@ -899,8 +912,8 @@ balance_plot_ann4 <- love.plot(forumla2,data = annUndajusted4,
                                   size = 3.5,
                                   shapes = c("circle filled", "circle filled","circle filled"),
                                   thresholds = c(m = .2),
-                                  colors = c("#003366","#E31B23","#006627"),
-                                  sample.names = c("unadjusted", "nearest neighbour","genetic"))+
+                                  colors = c("#30a1ba","#30baa3","#40ba30","#5730ba","#ba309c"),
+                                  sample.names = c("unadjusted", "genetic","nearest neighbour","genetic FS","nearest neighbour FS"))+
   xlab("D-W with PSID controls")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman",size = 18),
@@ -919,6 +932,6 @@ ann_lalonde <-ggarrange(balance_plot_ann1,balance_plot_ann2,
                            balance_plot_ann3,balance_plot_ann4,
                            ncol = 4,nrow = 1, common.legend = TRUE, legend="right")
 ann_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/ann.png', plot = last_plot(),
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/Balance plots/ann_all_methods.png', plot = last_plot(),
        width = 22, height = 8 , device = "png", dpi=700)
 
