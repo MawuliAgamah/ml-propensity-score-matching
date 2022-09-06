@@ -13,12 +13,11 @@ library('Matching')
 library('rgenoud')
 options(scipen=999)
 set.seed(1234)
-
 # KEY 
-# 1 - nsw treated + CPS control  (Lalonde's original sample)
-# 2 - nsw treated + PSID control (Lalonde's original sample)
-# 3 - nsw treated + CPS control  (Dehejia & Wahba sub-sample)
-# 4 - nsw treated + PSID control (Dehejia & Wahba sub-sample)
+# 1 - nsw treated + cps control  (lalonde's original sample)
+# 2 - nsw treated + psid control (lalonde's original sample)
+# 3 - nsw treated + cps control  (dehejia & wahba sub-sample)
+# 4 - nsw treated + psid control (dehejia & wahba sub-sample)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # Load Data and match
@@ -27,7 +26,8 @@ set.seed(1234)
 # LOGIT
 
 # un-adjusted logit data set's taken from python
-# When matching the default estimated for the match-it function is the ATT , which we use. 
+# When matching the default estimand for the match-it function is the ATT , which we use. 
+
 
 trimming.funct <- function(dataset){
   
@@ -39,7 +39,7 @@ trimming.funct <- function(dataset){
   dropped_count <- nrow(dataset)- nrow(trimmed_df)
   print (c("dropped:", dropped_count))
   return(trimmed_df)
-
+  
 }
 
 logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT_FS1.csv')
@@ -60,11 +60,10 @@ caliper4 = sd(logitUndajusted4$propensity_score, na.rm = FALSE)*0.25
 forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + propensity_score
 forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + propensity_score
 
-
-m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "nearest",ratio=5,distance = logitUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "nearest",ratio=5, distance = logitUndajusted2$propensity_score,caliper = caliper2, replace =  TRUE)
-m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "nearest",ratio=5, distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "nearest",ratio=5, distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE)
+m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1,method = "genetic",distance = logitUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_score,caliper = caliper2, replace =  TRUE,pop.size = 50)
+m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE,pop.size = 50)
 
 # CART 
 cartUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/cart/unmatched/nswCps_lalonde_ps_unmatched_CART_FS1.csv')
@@ -78,24 +77,22 @@ cartUndajusted2 <- trimming.funct(cartUndajusted2)
 cartUndajusted3 <- trimming.funct(cartUndajusted3)
 cartUndajusted4 <- trimming.funct(cartUndajusted4)
 
-
-
-
 caliper1 = sd(cartUndajusted1$propensity_score, na.rm = FALSE)*0.25
 caliper2 = sd(cartUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(cartUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(cartUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "nearest",ratio=5,distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "nearest",ratio=5, distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "nearest",ratio=5, distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "nearest",ratio=5, distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "genetic",distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "genetic", distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "genetic", distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "genetic", distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # Forest
 forestUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswCps_lalonde_ps_unmatched_FOREST_FS1.csv')
 forestUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswPsid_lalonde_ps_unmatched_FOREST_FS1.csv')
 forestUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswCps_dehWab_ps_unmatched_FOREST_FS1.csv')
 forestUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswPsid_dehWab_ps_unmatched_FOREST_FS1.csv')
+
 
 forestUndajusted1 <- trimming.funct(forestUndajusted1)
 forestUndajusted2 <- trimming.funct(forestUndajusted2)
@@ -107,10 +104,10 @@ caliper2 = sd(forestUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(forestUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(forestUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "nearest",ratio=5,distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "nearest",ratio=5, distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE)
-m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "nearest",ratio=5, distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "nearest",ratio=5, distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic",distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "genetic", distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE,pop.size = 50)
+m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "genetic", distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "genetic", distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # Boost 
 
@@ -119,29 +116,27 @@ boostUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/cau
 boostUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/boost/unmatched/nswCps_dehWab_ps_unmatched_BOOST_FS1.csv')
 boostUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/boost/unmatched/nswPsid_dehWab_ps_unmatched_BOOST_FS1.csv')
 
-
 boostUndajusted1 <- trimming.funct(boostUndajusted1)
 boostUndajusted2 <- trimming.funct(boostUndajusted2)
 boostUndajusted3 <- trimming.funct(boostUndajusted3)
 boostUndajusted4 <- trimming.funct(boostUndajusted4)
-
 
 caliper1 = sd(boostUndajusted1$propensity_score, na.rm = FALSE)*0.25
 caliper2 = sd(boostUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(boostUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(boostUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "nearest",ratio=5, distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE)
-m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "nearest",ratio=5, distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "nearest",ratio=5, distance = boostUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "nearest",ratio=5, distance = boostUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "genetic", distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE,pop.size = 50)
+m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "genetic", distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "genetic", distance = boostUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "genetic", distance = boostUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # ANN
-# Load unadjusted dataset 
-annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswCps_lalonde_ps_unmatched_ANN_FS1.csv')
-annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN_FS1.csv')
-annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN_FS1.csv')
-annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN_FS1.csv')
+# Load unadjusted dataet 
+annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswCps_lalonde_ps_unmatched_ANN_FS1.csv')
+annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN_FS1.csv')
+annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN_FS1.csv')
+annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datas/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN_FS1.csv')
 
 annUndajusted1 <- trimming.funct(annUndajusted1)
 annUndajusted2 <- trimming.funct(annUndajusted2)
@@ -153,10 +148,10 @@ caliper2 = sd(annUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(annUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(annUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "nearest",ratio=5, distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "nearest",ratio=5, distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "nearest",ratio=5, distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "nearest",ratio=5, distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "genetic", distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "genetic", distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "genetic", distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "genetic", distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # Matching basic summary
@@ -205,16 +200,16 @@ balance_plot_logit1 <- love.plot(m_out_logit1,
                                  thresholds = c(m = .1),
                                  colors = c("#003366","#E31B23"),
                                  sample.names = c("unadjusted", "adjusted"))+
-  xlab("Lalonde's sample with CPS control's")+
-  theme(legend.box.background = element_rect(),
+        xlab("Lalonde's sample with CPS control's")+
+        theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
         legend.position="none",
         panel.border=element_rect(size=1),
         panel.grid.minor.y = element_line(colour="white", size=0.5),
-        panel.grid.major.y = element_line(colour="white", size=0.5),
+         panel.grid.major.y = element_line(colour="white", size=0.5),
         panel.grid.minor.x= element_line(colour="white", size=0.5),
         panel.grid.major.x= element_line(colour="white", size=0.5))+
-  ggtitle("")
+        ggtitle("")
 
 
 balance_plot_logit2 <- love.plot(m_out_logit2,
@@ -294,22 +289,22 @@ logit_lalonde <-ggarrange(balance_plot_logit1,balance_plot_logit2,
                           balance_plot_logit3,balance_plot_logit4,
                           ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 logit_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/LOGIT_balance_plots_nearestNeighbour_featureSelect.png', plot = last_plot(),
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/LOGIT_balance_plots_4grid.png', plot = last_plot(),
        dpi = 300)
 
 # CART 
 balance_plot_cart1 <- love.plot(m_out_cart1,
-                                stat = c("mean.diffs"),
-                                drop.distance = TRUE, 
-                                var.order = "unadjusted",
-                                abs = FALSE,
-                                line =TRUE, 
-                                stars = "raw",
-                                size = 3.5,
-                                shapes = c("circle filled", "circle filled"),
-                                thresholds = c(m = .1),
-                                colors = c("#003366","#E31B23"),
-                                sample.names = c("unadjusted", "adjusted"))+
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line =TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .1),
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with CPS control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -320,20 +315,20 @@ balance_plot_cart1 <- love.plot(m_out_cart1,
         panel.grid.minor.x= element_line(colour="white", size=0.5),
         panel.grid.major.x= element_line(colour="white", size=0.5))+
   ggtitle("")
-balance_plot_cart1
+
 
 balance_plot_cart2 <- love.plot(m_out_cart2,
-                                stat = c("mean.diffs"),
-                                drop.distance = TRUE, 
-                                var.order = "unadjusted",
-                                abs = FALSE,
-                                line = TRUE, 
-                                stars = "raw",
-                                size = 3.5,
-                                shapes = c("circle filled", "circle filled"),
-                                thresholds = c(m = .1),
-                                colors = c("#003366","#E31B23"),
-                                sample.names = c("unadjusted", "adjusted"))+
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line = TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .1),
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -346,20 +341,18 @@ balance_plot_cart2 <- love.plot(m_out_cart2,
         axis.ticks.length=unit(-0.2, "cm"))+
   ggtitle("")
 
-balance_plot_cart2
-
 balance_plot_cart3 <- love.plot(m_out_cart3,
-                                stat = c("mean.diffs"),
-                                drop.distance = TRUE, 
-                                var.order = "unadjusted",
-                                abs = FALSE,
-                                line =TRUE, 
-                                stars = "raw",
-                                size = 3.5,
-                                shapes = c("circle filled", "circle filled"),
-                                thresholds = c(m = .1),
-                                colors = c("#003366","#E31B23"),
-                                sample.names = c("unadjusted", "adjusted"))+
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line =TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .1),
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -371,17 +364,17 @@ balance_plot_cart3 <- love.plot(m_out_cart3,
         panel.grid.major.x= element_line(colour="white", size=0.5))+
   ggtitle("")
 
-balance_plot_cart3
+
 balance_plot_cart4 <- love.plot(m_out_cart4,
-                                stat = c("mean.diffs"),
-                                drop.distance = TRUE, 
-                                var.order = "unadjusted",
-                                abs = FALSE,
-                                line = TRUE, 
-                                stars = "raw",
-                                size = 3.5,
-                                shapes = c("circle filled", "circle filled"),
-                                thresholds = c(m = .1),
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line = TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .1),
                                 colors = c("#003366","#E31B23"),
                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
@@ -395,28 +388,28 @@ balance_plot_cart4 <- love.plot(m_out_cart4,
         panel.grid.major.x= element_line(colour="white", size=0.5),
         axis.ticks.length=unit(-0.2, "cm"))+
   ggtitle("")
-balance_plot_cart4
+
 
 CART_lalonde <-ggarrange(balance_plot_cart1,balance_plot_cart2, 
-                         balance_plot_cart3,balance_plot_cart4,
-                         ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
+                          balance_plot_cart3,balance_plot_cart4,
+                          ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 CART_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/CART_balance_plots_nearestNeighbour_featureSelect.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/CART_balance_plots_4grid.png',dpi = 300, plot = last_plot())
 
 # Random Forest 
 # forest balance plots
 balance_plot_forest1 <- love.plot(m_out_forest1,
-                                  stat = c("mean.diffs"),
-                                  drop.distance = TRUE, 
-                                  var.order = "unadjusted",
-                                  abs = FALSE,
-                                  line =TRUE, 
-                                  stars = "raw",
-                                  size = 3.5,
-                                  shapes = c("circle filled", "circle filled"),
-                                  thresholds = c(m = .25),
-                                  colors = c("#003366","#E31B23"),
-                                  sample.names = c("unadjusted", "adjusted"))+
+                                stat = c("mean.diffs"),
+                                drop.distance = TRUE, 
+                                var.order = "unadjusted",
+                                abs = FALSE,
+                                line =TRUE, 
+                                stars = "raw",
+                                size = 3.5,
+                                shapes = c("circle filled", "circle filled"),
+                                thresholds = c(m = .25),
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with CPS control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -427,20 +420,20 @@ balance_plot_forest1 <- love.plot(m_out_forest1,
         panel.grid.minor.x= element_line(colour="white", size=0.5),
         panel.grid.major.x= element_line(colour="white", size=0.5))+
   ggtitle("")
-balance_plot_forest1
+
 
 balance_plot_forest2 <- love.plot(m_out_forest2,
-                                  stat = c("mean.diffs"),
-                                  drop.distance = TRUE, 
-                                  var.order = "unadjusted",
-                                  abs = FALSE,
-                                  line = TRUE, 
-                                  stars = "raw",
-                                  size = 3.5,
-                                  shapes = c("circle filled", "circle filled"),
-                                  thresholds = c(m = .25),
-                                  colors = c("#003366","#E31B23"),
-                                  sample.names = c("unadjusted", "adjusted"))+
+                                stat = c("mean.diffs"),
+                                drop.distance = TRUE, 
+                                var.order = "unadjusted",
+                                abs = FALSE,
+                                line = TRUE, 
+                                stars = "raw",
+                                size = 3.5,
+                                shapes = c("circle filled", "circle filled"),
+                                thresholds = c(m = .25),
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -453,20 +446,18 @@ balance_plot_forest2 <- love.plot(m_out_forest2,
         axis.ticks.length=unit(-0.2, "cm"))+
   ggtitle("")
 
-balance_plot_forest2
-
 balance_plot_forest3 <- love.plot(m_out_forest3,
-                                  stat = c("mean.diffs"),
-                                  drop.distance = TRUE, 
-                                  var.order = "unadjusted",
-                                  abs = FALSE,
-                                  line =TRUE, 
-                                  stars = "raw",
-                                  size = 3.5,
-                                  shapes = c("circle filled", "circle filled"),
-                                  thresholds = c(m = .25),
-                                  colors = c("#003366","#E31B23"),
-                                  sample.names = c("unadjusted", "adjusted"))+
+                                stat = c("mean.diffs"),
+                                drop.distance = TRUE, 
+                                var.order = "unadjusted",
+                                abs = FALSE,
+                                line =TRUE, 
+                                stars = "raw",
+                                size = 3.5,
+                                shapes = c("circle filled", "circle filled"),
+                                thresholds = c(m = .25),
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -478,19 +469,19 @@ balance_plot_forest3 <- love.plot(m_out_forest3,
         panel.grid.major.x= element_line(colour="white", size=0.5))+
   ggtitle("")
 
-balance_plot_forest3
+
 balance_plot_forest4 <- love.plot(m_out_forest4,
-                                  stat = c("mean.diffs"),
-                                  drop.distance = TRUE, 
-                                  var.order = "unadjusted",
-                                  abs = FALSE,
-                                  line = TRUE, 
-                                  stars = "raw",
-                                  size = 3.5,
-                                  shapes = c("circle filled", "circle filled"),
-                                  thresholds = c(m = .25),
-                                  colors = c("#003366","#E31B23"),
-                                  sample.names = c("unadjusted", "adjusted"))+
+                                stat = c("mean.diffs"),
+                                drop.distance = TRUE, 
+                                var.order = "unadjusted",
+                                abs = FALSE,
+                                line = TRUE, 
+                                stars = "raw",
+                                size = 3.5,
+                                shapes = c("circle filled", "circle filled"),
+                                thresholds = c(m = .25),
+                                colors = c("#003366","#E31B23"),
+                                sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -503,26 +494,26 @@ balance_plot_forest4 <- love.plot(m_out_forest4,
         axis.ticks.length=unit(-0.2, "cm"))+
   ggtitle("")
 
-balance_plot_forest4
+
 forest_lalonde <-ggarrange(balance_plot_forest1,balance_plot_forest2, 
-                           balance_plot_forest3,balance_plot_forest4,
-                           ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
+                         balance_plot_forest3,balance_plot_forest4,
+                         ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 forest_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/FOREST_balance_plots_nearestNeighbour.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/FOREST_balance_plots_4grid.png',dpi = 300, plot = last_plot())
 
 # Boosted trees 
 
 # XGboost balance plots
 balance_plot_boost1 <- love.plot(m_out_boost1,
-                                 stat = c("mean.diffs"),
-                                 drop.distance = TRUE, 
-                                 var.order = "unadjusted",
-                                 abs = FALSE,
-                                 line =TRUE, 
-                                 stars = "raw",
-                                 size = 3.5,
-                                 shapes = c("circle filled", "circle filled"),
-                                 thresholds = c(m = .25),
+                                  stat = c("mean.diffs"),
+                                  drop.distance = TRUE, 
+                                  var.order = "unadjusted",
+                                  abs = FALSE,
+                                  line =TRUE, 
+                                  stars = "raw",
+                                  size = 3.5,
+                                  shapes = c("circle filled", "circle filled"),
+                                  thresholds = c(m = .25),
                                  colors = c("#003366","#E31B23"),
                                  sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with CPS control's")+
@@ -535,18 +526,18 @@ balance_plot_boost1 <- love.plot(m_out_boost1,
         panel.grid.minor.x= element_line(colour="white", size=0.5),
         panel.grid.major.x= element_line(colour="white", size=0.5))+
   ggtitle("")
-balance_plot_boost1
+
 
 balance_plot_boost2 <- love.plot(m_out_boost2,
-                                 stat = c("mean.diffs"),
-                                 drop.distance = TRUE, 
-                                 var.order = "unadjusted",
-                                 abs = FALSE,
-                                 line = TRUE, 
-                                 stars = "raw",
-                                 size = 3.5,
-                                 shapes = c("circle filled", "circle filled"),
-                                 thresholds = c(m = .25),
+                                  stat = c("mean.diffs"),
+                                  drop.distance = TRUE, 
+                                  var.order = "unadjusted",
+                                  abs = FALSE,
+                                  line = TRUE, 
+                                  stars = "raw",
+                                  size = 3.5,
+                                  shapes = c("circle filled", "circle filled"),
+                                  thresholds = c(m = .25),
                                  colors = c("#003366","#E31B23"),
                                  sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID control's")+
@@ -560,17 +551,17 @@ balance_plot_boost2 <- love.plot(m_out_boost2,
         panel.grid.major.x= element_line(colour="white", size=0.5),
         axis.ticks.length=unit(-0.2, "cm"))+
   ggtitle("")
-balance_plot_boost2
+
 balance_plot_boost3 <- love.plot(m_out_boost3,
-                                 stat = c("mean.diffs"),
-                                 drop.distance = TRUE, 
-                                 var.order = "unadjusted",
-                                 abs = FALSE,
-                                 line =TRUE, 
-                                 stars = "raw",
-                                 size = 3.5,
-                                 shapes = c("circle filled", "circle filled"),
-                                 thresholds = c(m = .25),
+                                  stat = c("mean.diffs"),
+                                  drop.distance = TRUE, 
+                                  var.order = "unadjusted",
+                                  abs = FALSE,
+                                  line =TRUE, 
+                                  stars = "raw",
+                                  size = 3.5,
+                                  shapes = c("circle filled", "circle filled"),
+                                  thresholds = c(m = .25),
                                  colors = c("#003366","#E31B23"),
                                  sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
@@ -584,17 +575,17 @@ balance_plot_boost3 <- love.plot(m_out_boost3,
         panel.grid.major.x= element_line(colour="white", size=0.5))+
   ggtitle("")
 
-balance_plot_boost3
+
 balance_plot_boost4 <- love.plot(m_out_boost4,
-                                 stat = c("mean.diffs"),
-                                 drop.distance = TRUE, 
-                                 var.order = "unadjusted",
-                                 abs = FALSE,
-                                 line = TRUE, 
-                                 stars = "raw",
-                                 size = 3.5,
-                                 shapes = c("circle filled", "circle filled"),
-                                 thresholds = c(m = .25),
+                                  stat = c("mean.diffs"),
+                                  drop.distance = TRUE, 
+                                  var.order = "unadjusted",
+                                  abs = FALSE,
+                                  line = TRUE, 
+                                  stars = "raw",
+                                  size = 3.5,
+                                  shapes = c("circle filled", "circle filled"),
+                                  thresholds = c(m = .25),
                                  colors = c("#003366","#E31B23"),
                                  sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
@@ -609,27 +600,27 @@ balance_plot_boost4 <- love.plot(m_out_boost4,
         axis.ticks.length=unit(-0.2, "cm"))+
   ggtitle("")
 
-balance_plot_boost4
+
 boost_lalonde <-ggarrange(balance_plot_boost1,balance_plot_boost2, 
-                          balance_plot_boost3,balance_plot_boost4,
-                          ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
+                           balance_plot_boost3,balance_plot_boost4,
+                           ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 boost_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/BOOST_balance_plots_nearestNeighbour_featureSelect.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/BOOST_balance_plots_4grid.png',dpi = 300, plot = last_plot())
 
 # ANN
 # ANN balance plots
 balance_plot_ann1 <- love.plot(m_out_ann1,
-                               stat = c("mean.diffs"),
-                               drop.distance = TRUE, 
-                               var.order = "unadjusted",
-                               abs = FALSE,
-                               line =TRUE, 
-                               stars = "raw",
-                               size = 3.5,
-                               shapes = c("circle filled", "circle filled"),
-                               thresholds = c(m = .25),
-                               colors = c("#003366","#E31B23"),
-                               sample.names = c("unadjusted", "adjusted"))+
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line =TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .25),
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with CPS control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -643,17 +634,17 @@ balance_plot_ann1 <- love.plot(m_out_ann1,
 
 
 balance_plot_ann2 <- love.plot(m_out_ann2,
-                               stat = c("mean.diffs"),
-                               drop.distance = TRUE, 
-                               var.order = "unadjusted",
-                               abs = FALSE,
-                               line = TRUE, 
-                               stars = "raw",
-                               size = 3.5,
-                               shapes = c("circle filled", "circle filled"),
-                               thresholds = c(m = .25),
-                               colors = c("#003366","#E31B23"),
-                               sample.names = c("unadjusted", "adjusted"))+
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line = TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .25),
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Lalonde's sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -667,17 +658,17 @@ balance_plot_ann2 <- love.plot(m_out_ann2,
   ggtitle("")
 
 balance_plot_ann3 <- love.plot(m_out_ann3,
-                               stat = c("mean.diffs"),
-                               drop.distance = TRUE, 
-                               var.order = "unadjusted",
-                               abs = FALSE,
-                               line =TRUE, 
-                               stars = "raw",
-                               size = 3.5,
-                               shapes = c("circle filled", "circle filled"),
-                               thresholds = c(m = .25),
-                               colors = c("#003366","#E31B23"),
-                               sample.names = c("unadjusted", "adjusted"))+
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line =TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .25),
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -691,17 +682,17 @@ balance_plot_ann3 <- love.plot(m_out_ann3,
 
 
 balance_plot_ann4 <- love.plot(m_out_ann4,
-                               stat = c("mean.diffs"),
-                               drop.distance = TRUE, 
-                               var.order = "unadjusted",
-                               abs = FALSE,
-                               line = TRUE, 
-                               stars = "raw",
-                               size = 3.5,
-                               shapes = c("circle filled", "circle filled"),
-                               thresholds = c(m = .25),
-                               colors = c("#003366","#E31B23"),
-                               sample.names = c("unadjusted", "adjusted"))+
+                                 stat = c("mean.diffs"),
+                                 drop.distance = TRUE, 
+                                 var.order = "unadjusted",
+                                 abs = FALSE,
+                                 line = TRUE, 
+                                 stars = "raw",
+                                 size = 3.5,
+                                 shapes = c("circle filled", "circle filled"),
+                                 thresholds = c(m = .25),
+                                 colors = c("#003366","#E31B23"),
+                                 sample.names = c("unadjusted", "adjusted"))+
   xlab("Dehejia - Wahba sample with PSID control's")+
   theme(legend.box.background = element_rect(),
         text = element_text(family = "Times New Roman"),
@@ -716,10 +707,10 @@ balance_plot_ann4 <- love.plot(m_out_ann4,
 
 
 ann_lalonde <-ggarrange(balance_plot_ann1,balance_plot_ann2, 
-                        balance_plot_ann3,balance_plot_ann4,
-                        ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
+                          balance_plot_ann3,balance_plot_ann4,
+                          ncol = 2,nrow = 2, common.legend = TRUE, legend="right")
 ann_lalonde
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/ann_balance_plots_nearestNeighbour_featureSelect.png',dpi = 300, plot = last_plot())
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/ann_balance_plots_4grid.png',dpi = 300, plot = last_plot())
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 #EQQ plot's
@@ -736,11 +727,11 @@ plot(m_out_ann1, type = "qq", interactive = FALSE,
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 
 cs_logit_plt1 <- bal.plot(m_out_logit1, 
-                          var.name = "propensity_score", 
-                          which = "both",
-                          type = "histogram", 
+                              var.name = "propensity_score", 
+                              which = "both",
+                              type = "histogram", 
                           colors = c("#E31B23", "#003366"),
-                          mirror = TRUE)+
+                              mirror = TRUE)+
   xlab("Matched CPS control unit's")+
   theme(plot.margin = unit(c(1,1,1,1), "lines"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
@@ -748,24 +739,24 @@ cs_logit_plt1 <- bal.plot(m_out_logit1,
   ggtitle("")
 
 cs_logit_plt2 <- bal.plot(m_out_logit2, 
-                          var.name = "propensity_score", 
-                          which = "both",
-                          type = "histogram", 
+                              var.name = "propensity_score", 
+                              which = "both",
+                              type = "histogram", 
                           colors = c("#E31B23", "#003366"),
-                          mirror = TRUE)+
+                              mirror = TRUE)+
   theme(plot.margin = unit(c(1,1,1,1), "lines"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
         text = element_text(family = "Times New Roman",size = 18)) +
   xlab("Matched PSID control unit's")+
   ylab("")+
   ggtitle("")
-
+cs_logit_plt1
 cs_cart_plt1 <- bal.plot(m_out_cart1, 
-                         var.name = "propensity_score", 
-                         which = "both",
-                         type = "histogram", 
+                              var.name = "propensity_score", 
+                              which = "both",
+                              type = "histogram", 
                          colors = c("#E31B23", "#003366"),
-                         mirror = TRUE)+
+                              mirror = TRUE)+
   theme(plot.margin = unit(c(1,1,1,1), "lines"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
         text = element_text(family = "Times New Roman",size = 18))+
@@ -773,6 +764,19 @@ cs_cart_plt1 <- bal.plot(m_out_cart1,
   ggtitle("")
 
 cs_cart_plt2 <- bal.plot(m_out_cart2, 
+                              var.name = "propensity_score", 
+                              which = "both",
+                              type = "histogram", 
+                         colors = c("#E31B23", "#003366"),
+                              mirror = TRUE)+
+       theme(plot.margin = unit(c(1,1,1,1), "lines"),
+        panel.border = element_rect(colour = "black", fill=NA, size=1),
+        text = element_text(family = "Times New Roman",size = 18)) +
+  xlab("Matched PSID control unit's")+
+  ylab("")+
+  ggtitle("")
+cs_cart_plt2
+cs_forest_plt1 <- bal.plot(m_out_forest1, 
                          var.name = "propensity_score", 
                          which = "both",
                          type = "histogram", 
@@ -780,37 +784,49 @@ cs_cart_plt2 <- bal.plot(m_out_cart2,
                          mirror = TRUE)+
   theme(plot.margin = unit(c(1,1,1,1), "lines"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
-        text = element_text(family = "Times New Roman",size = 18)) +
-  xlab("Matched PSID control unit's")+
-  ylab("")+
-  ggtitle("")
-
-cs_forest_plt1 <- bal.plot(m_out_forest1, 
-                           var.name = "propensity_score", 
-                           which = "both",
-                           type = "histogram", 
-                           colors = c("#E31B23", "#003366"),
-                           mirror = TRUE)+
-  theme(plot.margin = unit(c(1,1,1,1), "lines"),
-        panel.border = element_rect(colour = "black", fill=NA, size=1),
         text = element_text(family = "Times New Roman",size = 18))+
   xlab("Matched PSID control unit's")+
   ggtitle("")
-
+cs_forest_plt1
 cs_forest_plt2 <- bal.plot(m_out_forest2, 
                            var.name = "propensity_score", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
                            mirror = TRUE)+
-  theme(plot.margin = unit(c(1,1,1,1), "lines"),
+        theme(plot.margin = unit(c(1,1,1,1), "lines"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
         text = element_text(family = "Times New Roman",size = 18))+
   xlab("Matched PSID control unit's")+
   ggtitle("")
 
-
+cs_forest_plt2
 cs_boost_plt1 <- bal.plot(m_out_boost1, 
+                           var.name = "propensity_score", 
+                           which = "both",
+                           type = "histogram",
+                          colors = c("#E31B23", "#003366"),
+                           mirror = TRUE)+
+        theme(plot.margin = unit(c(1,1,1,1), "lines"),
+        panel.border = element_rect(colour = "black", fill=NA, size=1),
+        text = element_text(family = "Times New Roman",size = 18))+
+  xlab("Matched CPS control unit's")+
+  ggtitle("")
+cs_boost_plt1
+cs_boost_plt2 <- bal.plot(m_out_boost2, 
+                          var.name = "propensity_score", 
+                          which = "both",
+                          type = "histogram", 
+                          colors = c("#E31B23", "#003366"),
+                          mirror = TRUE)+
+        theme(plot.margin = unit(c(1,1,1,1), "lines"),
+        panel.border = element_rect(colour = "black", fill=NA, size=1),
+        text = element_text(family = "Times New Roman",size = 18))+
+  xlab("Matched psid control unit's")+
+  ggtitle("")
+
+cs_boost_plt2
+cs_ann_plt1 <- bal.plot(m_out_ann1, 
                           var.name = "propensity_score", 
                           which = "both",
                           type = "histogram",
@@ -821,8 +837,8 @@ cs_boost_plt1 <- bal.plot(m_out_boost1,
         text = element_text(family = "Times New Roman",size = 18))+
   xlab("Matched CPS control unit's")+
   ggtitle("")
-
-cs_boost_plt2 <- bal.plot(m_out_boost2, 
+cs_ann_plt1
+cs_ann_plt2 <- bal.plot(m_out_ann2, 
                           var.name = "propensity_score", 
                           which = "both",
                           type = "histogram", 
@@ -832,34 +848,9 @@ cs_boost_plt2 <- bal.plot(m_out_boost2,
         panel.border = element_rect(colour = "black", fill=NA, size=1),
         text = element_text(family = "Times New Roman",size = 18))+
   xlab("Matched psid control unit's")+
-  ggtitle("")
-
-
-cs_ann_plt1 <- bal.plot(m_out_ann1, 
-                        var.name = "propensity_score", 
-                        which = "both",
-                        type = "histogram",
-                        colors = c("#E31B23", "#003366"),
-                        mirror = TRUE)+
-  theme(plot.margin = unit(c(1,1,1,1), "lines"),
-        panel.border = element_rect(colour = "black", fill=NA, size=1),
-        text = element_text(family = "Times New Roman",size = 18))+
-  xlab("Matched CPS control unit's")+
-  ggtitle("")
-
-cs_ann_plt2 <- bal.plot(m_out_ann2, 
-                        var.name = "propensity_score", 
-                        which = "both",
-                        type = "histogram", 
-                        colors = c("#E31B23", "#003366"),
-                        mirror = TRUE)+
-  theme(plot.margin = unit(c(1,1,1,1), "lines"),
-        panel.border = element_rect(colour = "black", fill=NA, size=1),
-        text = element_text(family = "Times New Roman",size = 18))+
-  xlab("Matched psid control unit's")+
   ylab("")+
   ggtitle("")
-
+cs_ann_plt2
 ggarrange(cs_logit_plt1,cs_logit_plt2,
           cs_cart_plt1,cs_cart_plt2,
           cs_forest_plt1,cs_forest_plt2,
@@ -871,7 +862,7 @@ ggarrange(cs_logit_plt1,cs_logit_plt2,
           font.label = list(size = 18, family = "Times New Roman"),
           legend="right")
 
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_lalonde_NN.png',
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_lalonde.png',
        dpi = 300, 
        width = 20, height = 18,
        plot = last_plot())
@@ -983,11 +974,11 @@ cs_boost_plt4 <- bal.plot(m_out_boost4,
   ggtitle("")
 
 cs_ann_plt3 <- bal.plot(m_out_ann3, 
-                        var.name = "propensity_score", 
-                        which = "both",
-                        type = "histogram",
-                        colors = c("#E31B23", "#003366"),
-                        mirror = TRUE)+
+                          var.name = "propensity_score", 
+                          which = "both",
+                          type = "histogram",
+                          colors = c("#E31B23", "#003366"),
+                          mirror = TRUE)+
   theme(plot.margin = unit(c(1,1,1,1), "lines"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
         text = element_text(family = "Times New Roman",size = 18))+
@@ -996,11 +987,11 @@ cs_ann_plt3 <- bal.plot(m_out_ann3,
   ggtitle("")
 
 cs_ann_plt4 <- bal.plot(m_out_ann4, 
-                        var.name = "propensity_score", 
-                        which = "both",
-                        type = "histogram", 
-                        colors = c("#E31B23", "#003366"),
-                        mirror = TRUE)+
+                          var.name = "propensity_score", 
+                          which = "both",
+                          type = "histogram", 
+                          colors = c("#E31B23", "#003366"),
+                          mirror = TRUE)+
   theme(plot.margin = unit(c(1,1,1,1), "lines"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
         text = element_text(family = "Times New Roman",size = 18))+
@@ -1019,27 +1010,128 @@ ggarrange(cs_logit_plt2,cs_logit_plt4,
           font.label = list(size = 18, family = "Times New Roman"),
           legend="right")
 
-ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_dehejiaWahba_NN.png',
+ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/balance_plots_4model_dehejiaWahba.png',
        dpi = 300, 
        width = 20, height = 18,
        plot = last_plot())
 
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
+# Get matching counts 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
+# Logit 
+
+
+
+
+
+
+#m_out_logit1 
+#m_out_logit2 
+#m_out_logit3 
+#m_out_logit4 
+
+forumla1
+
+
+# CART 
+#m_out_cart1 
+#m_out_cart2 
+#m_out_cart3 
+#m_out_cart4 
+
+# Forest
+#m_out_forest1 
+#m_out_forest2 
+#m_out_forest3 
+#m_out_forest4 
+
+# Boost 
+#m_out_boost1 
+#m_out_boost2 
+#m_out_boost3 
+#m_out_boost4 
+
+# ANN
+#m_out_ann1 
+#m_out_ann2
+#m_out_ann3
+#m_out_ann4 
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
-# Sub classification
+# WIP - Guido Imbens (2014) stratification_algorithm
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
+
+# Create strata based on propensity score 
+library("kableExtra")
+library(dplyr)
+library(gmodels)
+
+
+x <- match.data(m_out_logit1)
+#x <- match.data(m)
+y$distance
+
+x$propensity_score
+
+
+# calculate log odds 
+x$log_odds = log(x$propensity_score/(1-x$propensity_score))
+#perform t-test of means 
+t_test <- t.test(log_odds~treat,data=x)
+t_stat <- t_test$statistic # get test statistic 
+
+n <- 1 # initial number of strata 
+
+x$strata <- ifelse(x$log_odds > median(x$log_odds), 1,2)
+split1 <- x[x$strata==1,]
+
+t_stat_s1 <- t.test(log_odds~treat,data=split1)
+abs(t_stat_s1$statistic)
+
+x$strata <- ifelse(x$log_odds > median(x$log_odds), 3,4)
+
+split1 <- x[x$strata==3,]
+t_stat_s1 <- t.test(log_odds~treat,data=x[x$strata==3,])
+x$strata
+x[x$strata==2,]
+
+if (abs(t_stat) > n){ # check if block is inequality balanced , inadequate balance if t>n
+  
+  # split block and run t tests again
+  x$strata <- ifelse(x$log_odds > median(x$log_odds), 1,2)
+  
+  split1 <- x[x$strata==1,]
+  t.test(log_odds~treat,data=split1)
+  x[x$strata==2,]
+}else{
+  print('no')
+}
+
+
+x$strata <- ifelse(x$log_odds > median(x$log_odds), 1,2)
+x$strata
+data = data %>% mutate(quantile = ntile(propensity_score, strata))
+
+
+imbens_rubin_stratification_algorithm <- function(matchit_object,strata){
+  
+  # Begin with 1 strata 
+  
+    data <- match.data(matchit_object) # calculate log odds 
+  
+}
+
+# t-statistic 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
+#  Sub classification
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#----
 
 # Recursive stratification to ensure there is always at least 1 treated unit in each strata.
 # This could be improved upon to better test for common support (mean diff or statistically)
-
-
-# summarise stratification 
-#logit
-
-
 stratification_function <- function(matchit_object,strata){
   
   if(is.data.frame(matchit_object)){
@@ -1054,6 +1146,10 @@ stratification_function <- function(matchit_object,strata){
     if (0 %in% x2$t){return(stratification_function(dataout2,strata-1))}# check common support
     else{return(dataout2)}
   }}
+
+
+
+
 
 # Run function over mathched data set's
 # logit
@@ -1127,10 +1223,11 @@ benchmark.experimental.data$agesq = benchmark.experimental.data$age*benchmark.ex
 specification_1 = re78 ~ treat
 
 
-# Experimental benchmarks 
+# Experimental benchmark 
 summary(lm(specification_1 ,benchmark.experimental.data))
 summary(lm(specification_1 ,benchmark.data2))
 
+# matching logit benchmark 
 
 # Logit
 summary(lm(re78 ~ treat ,match.data(m_out_logit1)))
@@ -1160,14 +1257,10 @@ summary(lm(re78 ~ treat ,match.data(m_out_ann2)))
 summary(lm(re78 ~ treat ,match.data(m_out_ann3)))
 summary(lm(re78 ~ treat ,match.data(m_out_ann4)))
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Linear regression with controls 
-
 specification_2 = re78 ~ treat + age + agesq + nodegree+black+hispanic + re75
 specification_3 = re78 ~ treat + age + agesq + nodegree+black+hispanic + re74 + re74
-
 # Experimental benchmark 
-
 summary(lm(specification_2 ,benchmark.experimental.data))
 summary(lm(specification_3 ,benchmark.data2))
 
@@ -1185,6 +1278,7 @@ regression_controls(m_out_logit1,specification_2)
 regression_controls(m_out_logit2,specification_2)
 regression_controls(m_out_logit3,specification_3)
 regression_controls(m_out_logit4,specification_3)
+
 # Cart
 regression_controls(m_out_cart1,specification_2)
 regression_controls(m_out_cart2,specification_2)
@@ -1253,8 +1347,25 @@ abadie_imbens_estimator(m_out_ann4,annUndajusted4)
 
 # Horowitz-Thompson Weighted ATT estimator
 
-# weighted glm estimator 
 
+#  STRATIEFIED Weighted ATT
+
+#stratification_function <- function(matchit_object,strata){
+
+#    if(is.data.frame(matchit_object)){
+#      dataout1 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+#      x <- CrossTable(dataout1$treat, dataout1$quantile) # summary of strata
+#        if (0 %in% x$t){return(stratification_function(dataout1,strata-1))}
+#          else{return(dataout1)}
+#    }else{
+#      datain <- match.data(matchit_object) # match it object to data frame 
+#      dataout2 <- datain %>% mutate(quantile = ntile(propensity_score, strata)) # stratify
+#      x2 <- CrossTable(dataout2$treat, dataout2$quantile) # summary of strata
+#      if (0 %in% x$t){return(stratification_function(dataout2,strata-1))}# check common support
+#         else{return(dataout2)}
+#}}
+
+# weighted glm estimator 
 weighted_regression_estimator <- function(matchit_object){
   options(survey.lonely.psu = 'adjust')
   stratified_data <- stratification_function(matchit_object,5)
@@ -1262,13 +1373,12 @@ weighted_regression_estimator <- function(matchit_object){
   surveyDesign1 <- svydesign(ids =~ID,strata=~quantile,data = stratified_data,nest=F) # create survey design
   # replicate weight's for bootstrapped standard errors
   surveyDesign1.bootstrap <- as.svrepdesign(surveyDesign1,type=c("bootstrap"),replicates=100)
-  
-  #re-estimate the ATT with regression, with bootstrapped standard errors 
+
   outcomeModel2006Boot <- svyglm(re78~treat,surveyDesign1.bootstrap)
   summary(outcomeModel2006Boot)
   
 }
-
+  
 # Logit
 weighted_regression_estimator(m_out_logit1)
 weighted_regression_estimator(m_out_logit2)
@@ -1297,7 +1407,15 @@ weighted_regression_estimator(m_out_ann2)
 weighted_regression_estimator(m_out_ann3)
 weighted_regression_estimator(m_out_ann4)
 
+x <- match.data(m_out_forest1)
+treated <- x[x$treat==1,]
+control <- x[x$treat==0,]
+
+mean(treated$re78) - mean(control$re78)
+summary(control)
+summary(treated)
 
 
-#bootstrap standard errors 
+by(x, x$treat, summary)
+
 
