@@ -133,10 +133,10 @@ m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "g
 
 # ANN
 # Load unadjusted dataet 
-annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswCps_lalonde_ps_unmatched_ANN_FS1.csv')
-annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN_FS1.csv')
-annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/dataets/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN_FS1.csv')
-annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datas/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN_FS1.csv')
+annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswCps_lalonde_ps_unmatched_ANN_FS1.csv')
+annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN_FS1.csv')
+annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN_FS1.csv')
+annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN_FS1.csv')
 
 annUndajusted1 <- trimming.funct(annUndajusted1)
 annUndajusted2 <- trimming.funct(annUndajusted2)

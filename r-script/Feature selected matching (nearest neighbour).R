@@ -61,10 +61,10 @@ forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re
 forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + propensity_score
 
 
-m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "nearest",ratio=5,distance = logitUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "nearest",ratio=5, distance = logitUndajusted2$propensity_score,caliper = caliper2, replace =  TRUE)
-m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "nearest",ratio=5, distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "nearest",ratio=5, distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE)
+m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1, method = "nearest",ratio=1,distance = logitUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "nearest",ratio=1, distance = logitUndajusted2$propensity_score,caliper = caliper2, replace =  TRUE)
+m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "nearest",ratio=1, distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "nearest",ratio=1, distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE)
 
 # CART 
 cartUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/cart/unmatched/nswCps_lalonde_ps_unmatched_CART_FS1.csv')
@@ -86,10 +86,10 @@ caliper2 = sd(cartUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(cartUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(cartUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "nearest",ratio=5,distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "nearest",ratio=5, distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "nearest",ratio=5, distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "nearest",ratio=5, distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "nearest",ratio=1,distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "nearest",ratio=1, distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "nearest",ratio=1, distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "nearest",ratio=1, distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 
 # Forest
 forestUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswCps_lalonde_ps_unmatched_FOREST_FS1.csv')
@@ -107,10 +107,10 @@ caliper2 = sd(forestUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(forestUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(forestUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "nearest",ratio=5,distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "nearest",ratio=5, distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE)
-m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "nearest",ratio=5, distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "nearest",ratio=5, distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "nearest",ratio=1,distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "nearest",ratio=1, distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE)
+m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "nearest",ratio=1, distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "nearest",ratio=1, distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 
 # Boost 
 
@@ -131,10 +131,10 @@ caliper2 = sd(boostUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(boostUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(boostUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "nearest",ratio=5, distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE)
-m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "nearest",ratio=5, distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "nearest",ratio=5, distance = boostUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "nearest",ratio=5, distance = boostUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "nearest",ratio=1, distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE)
+m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "nearest",ratio=1, distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "nearest",ratio=1, distance = boostUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "nearest",ratio=1, distance = boostUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 
 # ANN
 # Load unadjusted dataset 
@@ -153,10 +153,10 @@ caliper2 = sd(annUndajusted2$propensity_score, na.rm = FALSE)*0.25
 caliper3 = sd(annUndajusted3$propensity_score, na.rm = FALSE)*0.25
 caliper4 = sd(annUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "nearest",ratio=5, distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
-m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "nearest",ratio=5, distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
-m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "nearest",ratio=5, distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
-m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "nearest",ratio=5, distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
+m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "nearest",ratio=1, distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE)
+m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "nearest",ratio=1, distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE)
+m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "nearest",ratio=1, distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE)
+m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "nearest",ratio=1, distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # Matching basic summary
