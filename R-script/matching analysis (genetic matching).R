@@ -43,34 +43,34 @@ trimming.funct <- function(dataset){
   
 }
 
-logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT.csv')
-logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_lalonde_ps_unmatched_LOGIT.csv')
-logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT.csv')
-logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT.csv')
+logitUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswCps_lalonde_ps_unmatched_LOGIT.csv')
+logitUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswPsid_lalonde_ps_unmatched_LOGIT.csv')
+logitUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswCps_dehWab_ps_unmatched_LOGIT.csv')
+logitUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/logit/unmatched/nswPsid_dehWab_ps_unmatched_LOGIT.csv')
 
 logitUndajusted1 <- trimming.funct(logitUndajusted1)
 logitUndajusted2 <- trimming.funct(logitUndajusted2)
 logitUndajusted3 <- trimming.funct(logitUndajusted3)
 logitUndajusted4 <- trimming.funct(logitUndajusted4)
 
-caliper1 = sd(logitUndajusted1$propensity_logit, na.rm = FALSE)*0.25
-caliper2 = sd(logitUndajusted2$propensity_logit, na.rm = FALSE)*0.25
-caliper3 = sd(logitUndajusted3$propensity_logit, na.rm = FALSE)*0.25
-caliper4 = sd(logitUndajusted4$propensity_logit, na.rm = FALSE)*0.25
+caliper1 = sd(logitUndajusted1$propensity_score, na.rm = FALSE)*0.25
+caliper2 = sd(logitUndajusted2$propensity_score, na.rm = FALSE)*0.25
+caliper3 = sd(logitUndajusted3$propensity_score, na.rm = FALSE)*0.25
+caliper4 = sd(logitUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + propensity_logit
-forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + propensity_logit
+forumla1 = treat ~ age + education. + black + hispanic + married + nodegree + re75 + propensity_score
+forumla2 = treat ~ age + education. + black + hispanic + married + nodegree + re74+ re75 + propensity_score
 
-m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1,method = "genetic",distance = logitUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
-m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_logit,caliper = caliper2, replace =  TRUE,pop.size = 50)
-m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_logit,caliper = caliper4, replace =  TRUE,pop.size = 50)
+m_out_logit1 <- matchit(formula = forumla1, data = logitUndajusted1,method = "genetic",distance = logitUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_logit2 <- matchit(formula = forumla1, data = logitUndajusted2, method = "genetic", distance = logitUndajusted2$propensity_score,caliper = caliper2, replace =  TRUE,pop.size = 50)
+m_out_logit3 <- matchit(formula = forumla2, data = logitUndajusted3, method = "genetic", distance = logitUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_logit4 <- matchit(formula = forumla2, data = logitUndajusted4, method = "genetic", distance = logitUndajusted4$propensity_score,caliper = caliper4, replace =  TRUE,pop.size = 50)
 
 # CART 
-cartUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswCps_lalonde_ps_unmatched_CART.csv')
-cartUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswPsid_lalonde_ps_unmatched_CART.csv')
-cartUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswCps_dehWab_ps_unmatched_CART.csv')
-cartUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/cart/unmatched/nswPsid_dehWab_ps_unmatched_CART.csv')
+cartUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/cart/unmatched/nswCps_lalonde_ps_unmatched_CART.csv')
+cartUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/cart/unmatched/nswPsid_lalonde_ps_unmatched_CART.csv')
+cartUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/cart/unmatched/nswCps_dehWab_ps_unmatched_CART.csv')
+cartUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/cart/unmatched/nswPsid_dehWab_ps_unmatched_CART.csv')
 
 
 cartUndajusted1 <- trimming.funct(cartUndajusted1)
@@ -78,21 +78,21 @@ cartUndajusted2 <- trimming.funct(cartUndajusted2)
 cartUndajusted3 <- trimming.funct(cartUndajusted3)
 cartUndajusted4 <- trimming.funct(cartUndajusted4)
 
-caliper1 = sd(cartUndajusted1$propensity_logit, na.rm = FALSE)*0.25
-caliper2 = sd(cartUndajusted2$propensity_logit, na.rm = FALSE)*0.25
-caliper3 = sd(cartUndajusted3$propensity_logit, na.rm = FALSE)*0.25
-caliper4 = sd(cartUndajusted4$propensity_logit, na.rm = FALSE)*0.25
+caliper1 = sd(cartUndajusted1$propensity_score, na.rm = FALSE)*0.25
+caliper2 = sd(cartUndajusted2$propensity_score, na.rm = FALSE)*0.25
+caliper3 = sd(cartUndajusted3$propensity_score, na.rm = FALSE)*0.25
+caliper4 = sd(cartUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "genetic",distance = cartUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
-m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "genetic", distance = cartUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 50)
-m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "genetic", distance = cartUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "genetic", distance = cartUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
+m_out_cart1 <- matchit(formula = forumla1, data = cartUndajusted1, method = "genetic",distance = cartUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_cart2 <- matchit(formula = forumla1, data = cartUndajusted2, method = "genetic", distance = cartUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_cart3 <- matchit(formula = forumla2, data = cartUndajusted3, method = "genetic", distance = cartUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_cart4 <- matchit(formula = forumla2, data = cartUndajusted4, method = "genetic", distance = cartUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # Forest
-forestUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswCps_lalonde_ps_unmatched_FOREST.csv')
-forestUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswPsid_lalonde_ps_unmatched_FOREST.csv')
-forestUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswCps_dehWab_ps_unmatched_FOREST.csv')
-forestUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/forest/unmatched/nswPsid_dehWab_ps_unmatched_FOREST.csv')
+forestUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswCps_lalonde_ps_unmatched_FOREST.csv')
+forestUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswPsid_lalonde_ps_unmatched_FOREST.csv')
+forestUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswCps_dehWab_ps_unmatched_FOREST.csv')
+forestUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/forest/unmatched/nswPsid_dehWab_ps_unmatched_FOREST.csv')
 
 
 forestUndajusted1 <- trimming.funct(forestUndajusted1)
@@ -100,59 +100,59 @@ forestUndajusted2 <- trimming.funct(forestUndajusted2)
 forestUndajusted3 <- trimming.funct(forestUndajusted3)
 forestUndajusted4 <- trimming.funct(forestUndajusted4)
 
-caliper1 = sd(forestUndajusted1$propensity_logit, na.rm = FALSE)*0.25
-caliper2 = sd(forestUndajusted2$propensity_logit, na.rm = FALSE)*0.25
-caliper3 = sd(forestUndajusted3$propensity_logit, na.rm = FALSE)*0.25
-caliper4 = sd(forestUndajusted4$propensity_logit, na.rm = FALSE)*0.25
+caliper1 = sd(forestUndajusted1$propensity_score, na.rm = FALSE)*0.25
+caliper2 = sd(forestUndajusted2$propensity_score, na.rm = FALSE)*0.25
+caliper3 = sd(forestUndajusted3$propensity_score, na.rm = FALSE)*0.25
+caliper4 = sd(forestUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic",distance = forestUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
-m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "genetic", distance = forestUndajusted2$propensity_logit,caliper =caliper2,replace =  TRUE,pop.size = 50)
-m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "genetic", distance = forestUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "genetic", distance = forestUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
+m_out_forest1 <- matchit(formula = forumla1, data = forestUndajusted1, method = "genetic",distance = forestUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_forest2 <- matchit(formula = forumla1, data = forestUndajusted2, method = "genetic", distance = forestUndajusted2$propensity_score,caliper =caliper2,replace =  TRUE,pop.size = 50)
+m_out_forest3 <- matchit(formula = forumla2, data = forestUndajusted3, method = "genetic", distance = forestUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_forest4 <- matchit(formula = forumla2, data = forestUndajusted4, method = "genetic", distance = forestUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # Boost 
 
-boostUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/boost/unmatched/nswCps_lalonde_ps_unmatched_BOOST.csv')
-boostUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/boost/unmatched/nswPsid_lalonde_ps_unmatched_BOOST.csv')
-boostUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/boost/unmatched/nswCps_dehWab_ps_unmatched_BOOST.csv')
-boostUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/boost/unmatched/nswPsid_dehWab_ps_unmatched_BOOST.csv')
+boostUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/boost/unmatched/nswCps_lalonde_ps_unmatched_BOOST.csv')
+boostUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/boost/unmatched/nswPsid_lalonde_ps_unmatched_BOOST.csv')
+boostUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/boost/unmatched/nswCps_dehWab_ps_unmatched_BOOST.csv')
+boostUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/boost/unmatched/nswPsid_dehWab_ps_unmatched_BOOST.csv')
 
 boostUndajusted1 <- trimming.funct(boostUndajusted1)
 boostUndajusted2 <- trimming.funct(boostUndajusted2)
 boostUndajusted3 <- trimming.funct(boostUndajusted3)
 boostUndajusted4 <- trimming.funct(boostUndajusted4)
 
-caliper1 = sd(boostUndajusted1$propensity_logit, na.rm = FALSE)*0.25
-caliper2 = sd(boostUndajusted2$propensity_logit, na.rm = FALSE)*0.25
-caliper3 = sd(boostUndajusted3$propensity_logit, na.rm = FALSE)*0.25
-caliper4 = sd(boostUndajusted4$propensity_logit, na.rm = FALSE)*0.25
+caliper1 = sd(boostUndajusted1$propensity_score, na.rm = FALSE)*0.25
+caliper2 = sd(boostUndajusted2$propensity_score, na.rm = FALSE)*0.25
+caliper3 = sd(boostUndajusted3$propensity_score, na.rm = FALSE)*0.25
+caliper4 = sd(boostUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "genetic", distance = boostUndajusted1$propensity_logit,caliper =caliper1,replace =  TRUE,pop.size = 50)
-m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "genetic", distance = boostUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 50)
-m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "genetic", distance = boostUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "genetic", distance = boostUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
+m_out_boost1 <- matchit(formula = forumla1, data = boostUndajusted1, method = "genetic", distance = boostUndajusted1$propensity_score,caliper =caliper1,replace =  TRUE,pop.size = 50)
+m_out_boost2 <- matchit(formula = forumla1, data = boostUndajusted2, method = "genetic", distance = boostUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_boost3 <- matchit(formula = forumla2, data = boostUndajusted3, method = "genetic", distance = boostUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_boost4 <- matchit(formula = forumla2, data = boostUndajusted4, method = "genetic", distance = boostUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 # ANN
 # Load unadjusted dataset 
-annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/ann/unmatched/nswCps_lalonde_ps_unmatched_ANN.csv')
-annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN.csv')
-annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN.csv')
-annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN.csv')
+annUndajusted1<- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswCps_lalonde_ps_unmatched_ANN.csv')
+annUndajusted2<-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswPsid_lalonde_ps_unmatched_ANN.csv')
+annUndajusted3 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswCps_dehWab_ps_unmatched_ANN.csv')
+annUndajusted4 <-read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/ann/unmatched/nswPsid_dehWab_ps_unmatched_ANN.csv')
 
 annUndajusted1 <- trimming.funct(annUndajusted1)
 annUndajusted2 <- trimming.funct(annUndajusted2)
 annUndajusted3 <- trimming.funct(annUndajusted3)
 annUndajusted4 <- trimming.funct(annUndajusted4)
 
-caliper1 = sd(annUndajusted1$propensity_logit, na.rm = FALSE)*0.25
-caliper2 = sd(annUndajusted2$propensity_logit, na.rm = FALSE)*0.25
-caliper3 = sd(annUndajusted3$propensity_logit, na.rm = FALSE)*0.25
-caliper4 = sd(annUndajusted4$propensity_logit, na.rm = FALSE)*0.25
+caliper1 = sd(annUndajusted1$propensity_score, na.rm = FALSE)*0.25
+caliper2 = sd(annUndajusted2$propensity_score, na.rm = FALSE)*0.25
+caliper3 = sd(annUndajusted3$propensity_score, na.rm = FALSE)*0.25
+caliper4 = sd(annUndajusted4$propensity_score, na.rm = FALSE)*0.25
 
-m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "genetic", distance = annUndajusted1$propensity_logit,caliper = caliper1,replace =  TRUE,pop.size = 50)
-m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "genetic", distance = annUndajusted2$propensity_logit,caliper = caliper2,replace =  TRUE,pop.size = 50)
-m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "genetic", distance = annUndajusted3$propensity_logit,caliper = caliper3,replace =  TRUE,pop.size = 50)
-m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "genetic", distance = annUndajusted4$propensity_logit,caliper = caliper4,replace =  TRUE,pop.size = 50)
+m_out_ann1 <- matchit(formula = forumla1, data = annUndajusted1, method = "genetic", distance = annUndajusted1$propensity_score,caliper = caliper1,replace =  TRUE,pop.size = 50)
+m_out_ann2 <- matchit(formula = forumla1, data = annUndajusted2, method = "genetic", distance = annUndajusted2$propensity_score,caliper = caliper2,replace =  TRUE,pop.size = 50)
+m_out_ann3 <- matchit(formula = forumla2, data = annUndajusted3, method = "genetic", distance = annUndajusted3$propensity_score,caliper = caliper3,replace =  TRUE,pop.size = 50)
+m_out_ann4 <- matchit(formula = forumla2, data = annUndajusted4, method = "genetic", distance = annUndajusted4$propensity_score,caliper = caliper4,replace =  TRUE,pop.size = 50)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 # Matching basic summary
@@ -717,7 +717,7 @@ ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/
 #EQQ plot's
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 plot(m_out_ann3, type = "qq", interactive = FALSE,
-     which.xs = c("propensity_logit","education.","re75"))
+     which.xs = c("propensity_score","education.","re75"))
 
 plot(m_out_ann1, type = "qq", interactive = FALSE,
      which.xs = c("hispanic","married","re75"))
@@ -728,7 +728,7 @@ plot(m_out_ann1, type = "qq", interactive = FALSE,
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ----
 
 cs_logit_plt1 <- bal.plot(m_out_logit1, 
-                              var.name = "propensity_logit", 
+                              var.name = "propensity_score", 
                               which = "both",
                               type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -740,7 +740,7 @@ cs_logit_plt1 <- bal.plot(m_out_logit1,
   ggtitle("")
 
 cs_logit_plt2 <- bal.plot(m_out_logit2, 
-                              var.name = "propensity_logit", 
+                              var.name = "propensity_score", 
                               which = "both",
                               type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -753,7 +753,7 @@ cs_logit_plt2 <- bal.plot(m_out_logit2,
   ggtitle("")
 cs_logit_plt1
 cs_cart_plt1 <- bal.plot(m_out_cart1, 
-                              var.name = "propensity_logit", 
+                              var.name = "propensity_score", 
                               which = "both",
                               type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -765,7 +765,7 @@ cs_cart_plt1 <- bal.plot(m_out_cart1,
   ggtitle("")
 
 cs_cart_plt2 <- bal.plot(m_out_cart2, 
-                              var.name = "propensity_logit", 
+                              var.name = "propensity_score", 
                               which = "both",
                               type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -778,7 +778,7 @@ cs_cart_plt2 <- bal.plot(m_out_cart2,
   ggtitle("")
 cs_cart_plt2
 cs_forest_plt1 <- bal.plot(m_out_forest1, 
-                         var.name = "propensity_logit", 
+                         var.name = "propensity_score", 
                          which = "both",
                          type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -790,7 +790,7 @@ cs_forest_plt1 <- bal.plot(m_out_forest1,
   ggtitle("")
 cs_forest_plt1
 cs_forest_plt2 <- bal.plot(m_out_forest2, 
-                           var.name = "propensity_logit", 
+                           var.name = "propensity_score", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
@@ -803,7 +803,7 @@ cs_forest_plt2 <- bal.plot(m_out_forest2,
 
 cs_forest_plt2
 cs_boost_plt1 <- bal.plot(m_out_boost1, 
-                           var.name = "propensity_logit", 
+                           var.name = "propensity_score", 
                            which = "both",
                            type = "histogram",
                           colors = c("#E31B23", "#003366"),
@@ -815,7 +815,7 @@ cs_boost_plt1 <- bal.plot(m_out_boost1,
   ggtitle("")
 cs_boost_plt1
 cs_boost_plt2 <- bal.plot(m_out_boost2, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -828,7 +828,7 @@ cs_boost_plt2 <- bal.plot(m_out_boost2,
 
 cs_boost_plt2
 cs_ann_plt1 <- bal.plot(m_out_ann1, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram",
                           colors = c("#E31B23", "#003366"),
@@ -840,7 +840,7 @@ cs_ann_plt1 <- bal.plot(m_out_ann1,
   ggtitle("")
 cs_ann_plt1
 cs_ann_plt2 <- bal.plot(m_out_ann2, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -874,7 +874,7 @@ ggsave('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/Plots/
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 cs_logit_plt3 <- bal.plot(m_out_logit3, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -886,7 +886,7 @@ cs_logit_plt3 <- bal.plot(m_out_logit3,
   ggtitle("")
 
 cs_logit_plt4 <- bal.plot(m_out_logit4, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -899,7 +899,7 @@ cs_logit_plt4 <- bal.plot(m_out_logit4,
   ggtitle("")
 
 cs_cart_plt3 <- bal.plot(m_out_cart3, 
-                         var.name = "propensity_logit", 
+                         var.name = "propensity_score", 
                          which = "both",
                          type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -911,7 +911,7 @@ cs_cart_plt3 <- bal.plot(m_out_cart3,
   ggtitle("")
 
 cs_cart_plt4 <- bal.plot(m_out_cart4, 
-                         var.name = "propensity_logit", 
+                         var.name = "propensity_score", 
                          which = "both",
                          type = "histogram", 
                          colors = c("#E31B23", "#003366"),
@@ -924,7 +924,7 @@ cs_cart_plt4 <- bal.plot(m_out_cart4,
   ggtitle("")
 
 cs_forest_plt3 <- bal.plot(m_out_forest4, 
-                           var.name = "propensity_logit", 
+                           var.name = "propensity_score", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
@@ -936,7 +936,7 @@ cs_forest_plt3 <- bal.plot(m_out_forest4,
   ggtitle("")
 
 cs_forest_plt4 <- bal.plot(m_out_forest4, 
-                           var.name = "propensity_logit", 
+                           var.name = "propensity_score", 
                            which = "both",
                            type = "histogram", 
                            colors = c("#E31B23", "#003366"),
@@ -950,7 +950,7 @@ cs_forest_plt4 <- bal.plot(m_out_forest4,
 
 
 cs_boost_plt3 <- bal.plot(m_out_boost3, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram",
                           colors = c("#E31B23", "#003366"),
@@ -962,7 +962,7 @@ cs_boost_plt3 <- bal.plot(m_out_boost3,
   ggtitle("")
 
 cs_boost_plt4 <- bal.plot(m_out_boost4, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -975,7 +975,7 @@ cs_boost_plt4 <- bal.plot(m_out_boost4,
   ggtitle("")
 
 cs_ann_plt3 <- bal.plot(m_out_ann3, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram",
                           colors = c("#E31B23", "#003366"),
@@ -988,7 +988,7 @@ cs_ann_plt3 <- bal.plot(m_out_ann3,
   ggtitle("")
 
 cs_ann_plt4 <- bal.plot(m_out_ann4, 
-                          var.name = "propensity_logit", 
+                          var.name = "propensity_score", 
                           which = "both",
                           type = "histogram", 
                           colors = c("#E31B23", "#003366"),
@@ -1237,10 +1237,10 @@ MatchBalance(forumla1, data=stratifiedMatch_logit1[stratifiedMatch_logit1$quanti
 
 
 # Benchmark experimental data 
-benchmark.data <- read_dta('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/nsw.dta')
-benchmark.data2 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/nsw_dehejia_wahba.csv')
+benchmark.data <- read_dta('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/nsw.dta')
+benchmark.data2 <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/nsw_dehejia_wahba.csv')
 benchmark.experimental.data <- subset(benchmark.data,select = -c(data_id))
-unmatched.data.psid.dehwab <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/datasets/quasi data/unmatched data/Quasi_NswPsid_dehWab.csv')
+unmatched.data.psid.dehwab <- read.csv('/Users/mawuliagamah/gitprojects/causal_inference/causal_inference/data/quasi data/unmatched data/Quasi_NswPsid_dehWab.csv')
 benchmark.experimental.data$agesq = benchmark.experimental.data$age*benchmark.experimental.data$age # age squared 
 
 
